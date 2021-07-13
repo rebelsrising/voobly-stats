@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="DEBUG">
+    <Properties>
+        <Property name="loggingPattern">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout name="loggingPattern" pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+        <RollingFile name="File">
+            <FileName>logs/vs.log</FileName>
+            <FilePattern>logs/%d{yyyy-MM-dd-HH-ss}_%i.log.zip</FilePattern>
+            <PatternLayout pattern="${loggingPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="8192 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+            <!--            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>-->
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="INFO">
+        <Logger name="gg.rebelsrising.aom.voobly.stats" level="DEBUG" additivity="true">
+        </Logger>
+        <Logger name="Exposed" level="INFO">
+        </Logger>
+        <Logger name="com.zaxxer.hikari" level="INFO">
+        </Logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="File"/>
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
     id 'application'
     id 'java'
     id 'idea'
@@ -9,7 +10,7 @@ group = 'gg.rebelsrising'
 version = '0.0.0-SNAPSHOT'
 
 // Main class.
-mainClassName = 'gg.rebelsrising.aom.voobly.crawler.MainKt'
+mainClassName = 'gg.rebelsrising.aom.voobly.stats.core.MainKt'
 
 java {
     sourceCompatibility = javaCompatibility
@@ -56,6 +57,15 @@ idea {
     }
 }
 
+task copyResources {
+    doLast {
+        copy {
+            from "config.json"
+            into "$buildDir/libs/"
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -63,9 +73,39 @@ repositories {
 dependencies {
     /** LOGGING. */
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "$log4jslf4jVersion"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "$log4Jslf4JVersion"
     // https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging-jvm
     implementation group: 'io.github.microutils', name: 'kotlin-logging-jvm', version: "$kotlinLoggingVersion"
+
+    /** JSON SERIALIZATION. */
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-json', version: "$kotlinxVersion"
+
+    /** JSOUP. */
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation group: 'org.jsoup', name: 'jsoup', version: "$jSoupVersion"
+
+    /** OKHTTP. */
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: "$okHttpVersion"
+
+    /** DB CONNECTION POOLING. */
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: "$hikariVersion"
+
+    /** EXPOSED. */
+    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-core
+    implementation group: 'org.jetbrains.exposed', name: 'exposed-core', version: "$exposedVersion"
+    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-dao
+    implementation group: 'org.jetbrains.exposed', name: 'exposed-dao', version: "$exposedVersion"
+    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-jdbc
+    implementation group: 'org.jetbrains.exposed', name: 'exposed-jdbc', version: "$exposedVersion"
+    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-jodatime
+    implementation group: 'org.jetbrains.exposed', name: 'exposed-jodatime', version: "$exposedVersion"
+
+    /** POSTGRES. */
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: "$postgresVersion"
 
     /** JUNIT. */
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-test

@@ -1,8 +1,10 @@
+### Credentials ###
+config.json
+
 ### Generic ###
 data/
 logs/
 .idea/
-out/
 
 ### Kotlin ###
 # Compiled class file

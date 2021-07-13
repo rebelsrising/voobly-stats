@@ -1,0 +1,13 @@
+{
+  "voobly": {
+    "user": "",
+    "pass": ""
+  },
+  "database": {
+    "user": "",
+    "pass": "",
+    "url": "",
+    "port": "",
+    "database": ""
+  }
+}
