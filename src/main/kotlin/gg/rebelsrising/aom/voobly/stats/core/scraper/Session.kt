@@ -70,7 +70,7 @@ class Session(private val config: VooblyConfig) {
             .execute()
     }
 
-    fun login() {
+    fun login(): Session {
         // Perform get request to login page (to not seem suspicious).
         val get = getRequest(LOGIN_URL)
 
@@ -86,6 +86,8 @@ class Session(private val config: VooblyConfig) {
         sessionCookies.remove("vbly_session2")
         sessionCookies.remove("vbly_session3")
         // Do NOT set vbly_GMT_bias or timestamps will be wrong.
+
+        return this
     }
 
 }

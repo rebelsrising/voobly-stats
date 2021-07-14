@@ -7,8 +7,11 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.Scraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 
 fun main() {
-    val s = Session(Config.load("config.json").voobly)
-    s.login()
+    val config = Config.load(Config.DEFAULT_CONFIG_FILE)
+
+    val s = Session(config.voobly).login()
+
+    Db.connect(config.database)
 
     Db.createTables()
 

@@ -2,7 +2,6 @@ package gg.rebelsrising.aom.voobly.stats.core.dal
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.config.DatabaseConfig
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -10,11 +9,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
 object Db {
-
-    init {
-        // TODO Remove this for release.
-        connectHardcoded()
-    }
 
     lateinit var db: DataSource
 
@@ -31,10 +25,6 @@ object Db {
         hikariConf.addDataSourceProperty("reWriteBatchedInserts", "true")
 
         db = HikariDataSource(hikariConf)
-    }
-
-    private fun connectHardcoded() {
-        connect(Config.load(Config.DEFAULT_CONFIG_FILE).database)
     }
 
     fun createTables() {

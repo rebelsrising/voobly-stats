@@ -85,7 +85,7 @@ class Scraper(val ladder: Ladder, val session: Session) {
             return DUPLICATE
         }
 
-        logger.debug { "Processing new match." }
+        logger.debug { "Processing as new match." }
 
         val m: Match
 
