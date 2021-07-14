@@ -34,7 +34,6 @@ class Match(
 
     fun addPlayers(playerList: List<Player>) {
         players = cleanPlayers(ArrayList(playerList))
-
         updateRating()
         updateWinner()
     }
@@ -66,9 +65,10 @@ class Match(
         return playerList
     }
 
-    fun updateRating(): Short {
+    fun updateRating() {
         if (players.isEmpty()) {
-            return 0
+            rating = 0
+            return
         }
 
         var acc = 0
@@ -77,15 +77,16 @@ class Match(
             acc += i.newRating
         }
 
-        return (acc / players.size).toShort()
+        rating = (acc / players.size).toShort()
     }
 
-    fun updateWinner(): Byte {
+    fun updateWinner() {
         if (players.isEmpty()) {
-            return 0
+            winner = 0
+            return
         }
 
-        return if (players[0].hasWon) 1 else 2
+        winner = if (players[0].hasWon) 1 else 2
     }
 
     fun isComplete(): Boolean {
