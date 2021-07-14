@@ -1,5 +1,7 @@
 package gg.rebelsrising.aom.voobly.stats.core.dal
 
+import gg.rebelsrising.aom.voobly.stats.core.dal.util.batchUpsert
+import gg.rebelsrising.aom.voobly.stats.core.dal.util.upsert
 import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction

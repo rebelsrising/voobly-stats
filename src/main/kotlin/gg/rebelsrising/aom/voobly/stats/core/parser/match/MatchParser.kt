@@ -2,7 +2,7 @@ package gg.rebelsrising.aom.voobly.stats.core.parser.match
 
 import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
-import gg.rebelsrising.aom.voobly.stats.core.util.TimeUtil
+import gg.rebelsrising.aom.voobly.stats.core.parser.util.TimeUtil
 import mu.KotlinLogging
 import org.jsoup.nodes.Document
 

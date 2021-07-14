@@ -1,10 +1,10 @@
 package gg.rebelsrising.aom.voobly.stats.core.dal
 
+import gg.rebelsrising.aom.voobly.stats.core.dal.util.datetimezone
 import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
@@ -19,8 +19,8 @@ object MatchTable : Table("match") {
     val duration = integer("game_duration").index() // Seconds.
     val recUrl = varchar("rec_url", 64).index()
     val hasObs = bool("has_obs") // Whether the game had at least one observer.
-    val dateIndexed = datetime("date_indexed").clientDefault { DateTime(DateTimeZone.UTC) }
-    val datePlayed = datetime("date_played")
+    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime(DateTimeZone.UTC) }
+    val datePlayed = datetimezone("date_played")
 
     override val primaryKey: PrimaryKey = PrimaryKey(matchId)
 
