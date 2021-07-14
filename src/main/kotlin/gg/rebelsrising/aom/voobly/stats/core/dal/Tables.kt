@@ -6,20 +6,18 @@ import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 
 object MatchTable : Table("match") {
 
     val matchId = integer("match_id")
     val ladder = enumerationByName("ladder", 48, Ladder::class)
     val rating = short("rating").index()
-    val winner = byte("winning_team")
     val map = varchar("map", 48).index()
     val mod = varchar("mod", 48).index()
     val duration = integer("game_duration").index() // Seconds.
     val recUrl = varchar("rec_url", 64).index()
     val hasObs = bool("has_obs") // Whether the game had at least one observer.
-    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime(DateTimeZone.UTC) }
+    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime() }
     val datePlayed = datetimezone("date_played")
 
     override val primaryKey: PrimaryKey = PrimaryKey(matchId)

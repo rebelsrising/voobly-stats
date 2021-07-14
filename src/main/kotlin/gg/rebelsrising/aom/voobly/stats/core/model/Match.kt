@@ -19,9 +19,6 @@ class Match(
     lateinit var recUrl: String
         private set
 
-    var winner: Byte = 0
-        private set
-
     var rating: Short = 0
         private set
 
@@ -35,7 +32,6 @@ class Match(
     fun addPlayers(playerList: List<Player>) {
         players = cleanPlayers(ArrayList(playerList))
         updateRating()
-        updateWinner()
     }
 
     fun setRecUrl(url: String) {
@@ -78,15 +74,6 @@ class Match(
         }
 
         rating = (acc / players.size).toShort()
-    }
-
-    fun updateWinner() {
-        if (players.isEmpty()) {
-            winner = 0
-            return
-        }
-
-        winner = if (players[0].hasWon) 1 else 2
     }
 
     fun isComplete(): Boolean {

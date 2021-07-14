@@ -9,5 +9,4 @@ class Player(
     val team: Byte,
     val newRating: Short,
     val delta: Byte,
-    val hasWon: Boolean
 )

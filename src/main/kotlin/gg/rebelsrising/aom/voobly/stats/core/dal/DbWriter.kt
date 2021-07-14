@@ -5,8 +5,6 @@ import gg.rebelsrising.aom.voobly.stats.core.dal.util.upsert
 import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 
 @Suppress("DuplicatedCode")
 object DbWriter {
@@ -21,14 +19,12 @@ object DbWriter {
                 it[matchId] = m.matchId
                 it[ladder] = m.ladder
                 it[rating] = m.rating
-                it[winner] = m.winner
                 it[map] = m.map
                 it[mod] = m.mod
                 it[duration] = m.duration
                 it[recUrl] = m.recUrl
                 it[hasObs] = m.hasObs
                 it[datePlayed] = m.date
-                it[dateIndexed] = DateTime(DateTimeZone.UTC)
             } get MatchTable.matchId
 
             PlayerDataTable.batchUpsert(

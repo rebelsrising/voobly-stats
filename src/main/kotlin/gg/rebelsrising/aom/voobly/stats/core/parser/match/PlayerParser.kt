@@ -12,15 +12,14 @@ private val logger = KotlinLogging.logger {}
 class PlayerParser : Parser<ArrayList<Player>> {
 
     companion object {
-        private val CSS_QUERY =
+        private const val CSS_QUERY =
             ".content > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr"
 
-        const val PROFILE_VIEW = "profile/view/"
-        const val RES_WIN = "res/games/AOC/win.PNG" // Same for all games.
-        const val RES_CIVS_PREFIX = "res/games/"
-        const val RES_CIVS_SUFFIX = "civs/"
+        private const val PROFILE_VIEW = "profile/view/"
+        private const val RES_CIVS_PREFIX = "res/games/"
+        private const val RES_CIVS_SUFFIX = "civs/"
 
-        const val CIV_URL = RES_CIVS_PREFIX + "AOM/" + RES_CIVS_SUFFIX
+        private const val CIV_URL = RES_CIVS_PREFIX + "AOM/" + RES_CIVS_SUFFIX
     }
 
     private fun parsePlayer(e: Element): Player {
@@ -42,16 +41,13 @@ class PlayerParser : Parser<ArrayList<Player>> {
             }
         }
 
-        logger.debug { "Id: $id Name: $name Team Name: $teamName Team URL: $teamUrl" }
+        logger.debug { "ID: $id Name: $name Team Name: $teamName Team URL: $teamUrl" }
 
-        // Img: Winner and civ.
+        // Img: Civ.
         val img = e.select("img")
 
-        val hasWon = img.any { i -> i.attr("src").contains(RES_WIN) }
         val civId: String = img.first { i -> i.attr("src").contains(CIV_URL) }
             .attr("src").substringAfterLast("/").substringBefore(".jpg")
-
-        logger.debug { "Civ ID: $civId Has won: $hasWon" }
 
         // Team, rate, and delta.
         val span = e.select("span")
@@ -60,7 +56,7 @@ class PlayerParser : Parser<ArrayList<Player>> {
         val delta = span.text().substringAfter("Points: ").substringBefore(" ")
         val team = span.text().substringAfter("Team: ").substringBefore(" ")
 
-        logger.debug { "Team: $team New rate: $newRate Delta: $delta" }
+        logger.debug { "Civ ID $civId Team: $team New rate: $newRate Delta: $delta" }
 
         return Player(
             id.toIntOrNull() ?: -1,
@@ -71,7 +67,6 @@ class PlayerParser : Parser<ArrayList<Player>> {
             team.toByteOrNull() ?: -1,
             newRate.toShortOrNull() ?: 0,
             delta.toByteOrNull() ?: 0,
-            hasWon
         )
     }
 

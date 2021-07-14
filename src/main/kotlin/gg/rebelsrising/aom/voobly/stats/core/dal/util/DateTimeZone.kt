@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.vendors.currentDialect
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import java.sql.ResultSet
 
 // Only works for Postgres as of now!
 
