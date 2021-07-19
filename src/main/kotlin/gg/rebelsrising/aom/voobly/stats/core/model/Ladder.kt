@@ -2,6 +2,7 @@ package gg.rebelsrising.aom.voobly.stats.core.model
 
 enum class Ladder(val mainUrl: String, val idUrl: String) {
 
+    // Restrict the names to 16 characters at most.
     UNKNOWN("", ""),
     AOT_1X("Age-of-Mythology-The-Titans/1v1-Supremacy", "326"),
     AOT_TG("Age-of-Mythology-The-Titans/TG-Supremacy", "327"),

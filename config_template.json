@@ -1,13 +1,31 @@
 {
+  "database": {
+    "user": "postgres",
+    "pass": "",
+    "url": "127.0.0.1",
+    "port": "5432",
+    "database": "postgres"
+  },
   "voobly": {
     "user": "",
     "pass": ""
   },
-  "database": {
-    "user": "",
-    "pass": "",
-    "url": "",
-    "port": "",
-    "database": ""
+  "matchScraper": {
+    "busySleep": 1000,
+    "idleSleep": 1000,
+    "lastProcessingThresholdMins": 10,
+    "batchSize": 10
+  },
+  "matchIdScraper": {
+    "busySleep": 2500,
+    "idleSleep": 1000
+  },
+  "playerIdScraper": {
+    "busySleep": 10000,
+    "dailyInterval": 2
+  },
+  "ladderScraper": {
+    "busySleep": 5000,
+    "hourlyInterval": 4
   }
 }

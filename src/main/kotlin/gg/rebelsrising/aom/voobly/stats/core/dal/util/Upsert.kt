@@ -11,10 +11,11 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.vendors.PostgreSQLDialect
 import org.jetbrains.exposed.sql.vendors.currentDialect
 
-// Only works for Postgres as of now!
-// Batched upsert functionality inspired by:
+// Batched upsert functionality for Postgres inspired by:
 // https://gist.github.com/oshai/9b58cf3365257c9324fa4dcccb2481b2#file-upsert-kt
 // https://github.com/LukasForst/exposed-upsert/blob/master/src/main/kotlin/pw/forst/exposed/InsertOrUpdate.kt
+
+// Currently not used.
 
 class BatchUpsert(
     table: Table,

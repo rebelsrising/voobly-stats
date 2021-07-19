@@ -13,10 +13,10 @@ class Match(
     lateinit var ladder: Ladder
         private set
 
-    lateinit var players: List<Player>
+    var players: List<Player> = ArrayList()
         private set
 
-    lateinit var recUrl: String
+    var recUrl: String = ""
         private set
 
     var rating: Short = 0
