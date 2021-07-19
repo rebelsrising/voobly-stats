@@ -58,7 +58,7 @@ object Db {
     }
 
     fun matchExists(id: Int): Boolean {
-        return transaction {
+        return transaction(Database.connect(db)) {
             matchExistsQuery(id).invoke()
         }
     }
@@ -155,6 +155,16 @@ object Db {
                 it[lastProcessingAttempt] = DateTime.now()
             }
         }
+    }
+
+    fun estimateNumPendingMatchJobs(): Int {
+        // Requires Postgres!
+        return transaction(Database.connect(db)) {
+            return@transaction exec("SELECT reltuples AS estimate FROM pg_class WHERE relname = '${MatchJobTable.tableName}';") {
+                it.next()
+                return@exec it.getInt(1)
+            }
+        } ?: 0 // If this fails, something went very wrong.
     }
 
     fun writeMatchAndUpdateJob(m: Match) {

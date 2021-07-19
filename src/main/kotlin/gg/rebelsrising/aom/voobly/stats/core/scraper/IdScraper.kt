@@ -22,6 +22,7 @@ abstract class IdScraper(
         }
     }
 
+    // TODO Add scraper name.
     abstract val urlPrefix: String
     abstract val idParser: Parser<ArrayList<String>>
 

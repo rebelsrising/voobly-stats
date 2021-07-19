@@ -29,7 +29,7 @@ class MatchIdScraper(
         return ret
     }
 
-    // Usually you will want to use MatchIdScraper, which essentially wraps around this class.
+    // Usually you will want to use PlayerScraper, which essentially wraps around this class.
     override fun run() {
         while (true) {
             scrapePageBrowser()

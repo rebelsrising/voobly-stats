@@ -34,7 +34,6 @@ class PlayerIdScraper(
     override fun run() {
         while (true) {
             // TODO Consider using something like https://stackoverflow.com/questions/25296718/repeat-an-action-every-2-seconds-in-java here.
-            // TODO Consider having some sort of check to determine
 
             val currTime = DateTime.now()
 

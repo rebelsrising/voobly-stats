@@ -14,11 +14,12 @@ class MatchParser : Parser<Match> {
         private const val TABLE_CSS_QUERY = ".content table tbody tr td table tbody tr td"
     }
 
+    // TODO Better exception handling/escalation.
     override fun parse(doc: Document): Match {
         val table = doc.select(TABLE_CSS_QUERY)
 
         // This should work for AoM and AoE.
-        // Use filters/lambdas if it turns out to be too unreliable.
+        // Use filters/lambdas if this turns out to be unreliable.
 
         val matchId = table[1].text()
         val date = table[4].text()

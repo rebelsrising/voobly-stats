@@ -68,8 +68,6 @@ class MatchScraper(
             return DUPLICATE
         }
 
-        logger.debug { "Processing as new match." }
-
         val m: Match
 
         try {
@@ -86,7 +84,7 @@ class MatchScraper(
         }
 
         if (!m.isComplete()) {
-            logger.error { "Incomplete information for match!" }
+            logger.debug { "Incomplete information for match!" }
 
             // TODO Replace this check with a timestamp check (refactor scrape jobs).
             if (job.status == MatchScrapeStatus.DELAYED) {

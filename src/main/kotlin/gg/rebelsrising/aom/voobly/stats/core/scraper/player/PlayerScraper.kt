@@ -13,9 +13,13 @@ class PlayerScraper(
     val config: MatchIdScraperConfig
 ) : Scraper {
 
-    fun processPlayerJob(): Boolean {
-        // TODO Check how many unprocessed matches we have, sleep if there are too many.
+    fun processPlayerJob(pendingJobsThreshold: Int = 100): Boolean {
+        if (Db.estimateNumPendingMatchJobs() > pendingJobsThreshold) {
+            // Don't do anything if we have too many pending match jobs.
+            return false
+        }
 
+        // Not too many pending match jobs, get player job and scrape the player's match history.
         val playerJob = Db.getPlayerJobForProcessing(ladder) ?: return false
 
         MatchIdScraper(session, playerJob, config).scrapePageBrowser()
@@ -30,6 +34,7 @@ class PlayerScraper(
     override fun run() {
         while (true) {
             if (!processPlayerJob()) {
+                // Happens if we have plenty of match IDs with status OPEN or no OPEN player jobs.
                 Thread.sleep(config.idleSleep)
             }
         }

@@ -8,7 +8,6 @@ import org.jsoup.nodes.Document
 
 private val logger = KotlinLogging.logger {}
 
-// TODO Merge this with TopPlayerIdParser (arguments: filterString).
 class MatchIdParser : Parser<ArrayList<String>> {
 
     companion object {
@@ -30,3 +29,5 @@ class MatchIdParser : Parser<ArrayList<String>> {
     }
 
 }
+
+
