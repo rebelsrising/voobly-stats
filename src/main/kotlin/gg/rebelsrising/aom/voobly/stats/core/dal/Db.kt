@@ -202,7 +202,7 @@ object Db {
         }
     }
 
-    // TODO Consider removing the threshold as, upon a crash/restart we should just reset all elements in PROCESSING state.
+    // TODO Consider removing the threshold - upon a crash/restart we should just reset all elements in PROCESSING state.
     fun getPlayerJobForProcessing(
         targetLadder: Ladder,
         lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)

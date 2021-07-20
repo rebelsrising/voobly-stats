@@ -36,7 +36,7 @@ abstract class IdScraper(
     }
 
     fun scrapePage(pageId: Int): ScrapeStats {
-        logger.info { "Scraping page with ID $pageId." }
+        logger.info { "Scraping page with ID $pageId for IDs." }
 
         val currStats = ScrapeStats()
 

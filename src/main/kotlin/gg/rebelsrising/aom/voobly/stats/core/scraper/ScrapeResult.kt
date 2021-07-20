@@ -2,6 +2,6 @@ package gg.rebelsrising.aom.voobly.stats.core.scraper
 
 enum class ScrapeResult {
 
-    SUCCESS, DUPLICATE, INSUFFICIENT_INFO, PARSE_ERROR, MALFORMED_ID, IO_ERROR
+    SUCCESS, DUPLICATE, INSUFFICIENT_INFO, PARSE_ERROR
 
 }

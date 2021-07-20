@@ -86,7 +86,7 @@ class MatchScraper(
         if (!m.isComplete()) {
             logger.debug { "Incomplete information for match!" }
 
-            // TODO Replace this check with a timestamp check (refactor scrape jobs).
+            // TODO Replace this check with a timestamp check (refactor MatchScrapeJob).
             if (job.status == MatchScrapeStatus.DELAYED) {
                 job.status = MatchScrapeStatus.FAILED
             } else {

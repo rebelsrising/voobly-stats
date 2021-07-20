@@ -22,10 +22,4 @@ fun main() {
     Thread(PlayerScraper(s, Ladder.AOT_1X, config.matchIdScraper)).start()
     Thread(MatchScraper(s, Ladder.AOT_1X, config.matchScraper)).start()
 
-//    PlayerIdScraper(s, Ladder.AOT_1X, config.playerIdScraper).scrapePageBrowser()
-//    MatchIdScraper(s, PlayerScrapeJob(125995000, Ladder.AOT_1X), config.matchIdScraper).scrapePageBrowser()
-//    MatchScraper(s, Ladder.AOT_1X, config.matchScraper).scrapeMatchJobBatch()
-//    MatchScraper(s, Ladder.AOT_1X, config.matchScraper).scrapeMatchJobBatch()
-//    MatchScraper(s, Ladder.AOT_1X, config.matchScraper).scrapeMatchJobBatch()
-
 }

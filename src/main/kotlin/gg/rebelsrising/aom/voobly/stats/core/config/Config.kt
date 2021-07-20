@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
 
+// TODO Make the config global so we don't always have to pass it around (it remains static during exec anyway).
 @Serializable
 data class Config(
     val database: DatabaseConfig,
