@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Settings.
-PASS=""
+PASS="$1"
 MOUNT_PATH="$(pwd)/data"
 
 printf "\nMounting path: %s\n\n" "$MOUNT_PATH"
