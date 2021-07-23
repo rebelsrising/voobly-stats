@@ -79,7 +79,7 @@ abstract class IdScraper(
             currPage++
         } while (currStats.total > 0)
 
-        logger.info { "Stats from scraping up to browser page ${currPage + 1} (page ID: $currPage):" }
+        logger.info { "Stats from scraping up to browser page $currPage (page ID: ${currPage - 1}):" }
         logger.info { "Checked: ${stats.total}" }
         logger.info { "Added: ${stats.new}" }
         logger.info { "Duplicates: ${stats.duplicates}" }
