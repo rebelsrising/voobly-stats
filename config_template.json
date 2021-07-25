@@ -14,6 +14,7 @@
     "busySleep": 1000,
     "idleSleep": 1000,
     "lastProcessingThresholdMins": 10,
+    "requireMap": false,
     "batchSize": 10
   },
   "matchIdScraper": {
