@@ -76,10 +76,14 @@ class Match(
         rating = (acc / players.size).toShort()
     }
 
-    fun isComplete(): Boolean {
-        return players.size >= 2 &&
-                this::ladder.isInitialized &&
-                ((map != "n/a" && map != "") || recUrl != "")
+    fun isComplete(requireMap: Boolean = false): Boolean {
+        val res = players.size >= 2 && this::ladder.isInitialized
+
+        if (!requireMap) {
+            return res
+        }
+
+        return res && ((map != "n/a" && map != "") || recUrl != "")
     }
 
 }

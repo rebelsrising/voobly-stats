@@ -2,7 +2,7 @@ package gg.rebelsrising.aom.voobly.stats.core.parser.id
 
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.MATCH_VIEW
-import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY
 import mu.KotlinLogging
 import org.jsoup.nodes.Document
 
@@ -15,10 +15,9 @@ class MatchIdParser : Parser<ArrayList<String>> {
     }
 
     override fun parse(doc: Document): ArrayList<String> {
-        // TODO Consider adding as a setting whether we only want games with a rec or all games.
-        // VOOBLY_WWW points to recorded games - this is something we normally want because otherwise we wouldn't know the map.
+        // TODO If we require a recorded game/the map, we may have to filter differently here and add a constructor argument.
         val urls = doc.select(CSS_QUERY)
-            .filter { e -> e.attr("href").startsWith(VOOBLY_WWW + MATCH_VIEW) }
+            .filter { e -> e.attr("href").startsWith(VOOBLY + MATCH_VIEW) }
             .map { e -> e.attr("href") }
             .toCollection(ArrayList())
 

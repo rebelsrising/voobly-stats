@@ -7,5 +7,6 @@ data class MatchScraperConfig(
     val busySleep: Long,
     val idleSleep: Long,
     val lastProcessingThresholdMins: Int,
+    val requireMap: Boolean,
     val batchSize: Int
 )

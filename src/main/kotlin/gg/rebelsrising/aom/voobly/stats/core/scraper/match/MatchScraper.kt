@@ -83,10 +83,11 @@ class MatchScraper(
             return PARSE_ERROR
         }
 
-        if (!m.isComplete()) {
+        if (!m.isComplete(config.requireMap)) {
             logger.debug { "Incomplete information for match!" }
 
-            // TODO Replace this check with a timestamp check (refactor MatchScrapeJob).
+            // TODO Replace this check with a timestamp check (requires MatchScrapeJob refactor)?
+            // Currently, the delay between reprocessing is exclusively defined by lastProcessingThresholdMins.
             if (job.status == MatchScrapeStatus.DELAYED) {
                 job.status = MatchScrapeStatus.FAILED
             } else {

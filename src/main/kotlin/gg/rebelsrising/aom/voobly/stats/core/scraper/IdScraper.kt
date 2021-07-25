@@ -80,10 +80,10 @@ abstract class IdScraper(
         } while (currStats.total > 0)
 
         logger.info { "Stats from scraping up to browser page $currPage (page ID: ${currPage - 1}):" }
-        logger.info { "Checked: ${stats.total}" }
-        logger.info { "Added: ${stats.new}" }
-        logger.info { "Duplicates: ${stats.duplicates}" }
-        logger.info { "Failed: ${stats.failed}" }
+        logger.info { "Checked: ${stats.total.toString().padStart(4, ' ')}" }
+        logger.info { "New: ${stats.new.toString().padStart(4, ' ')}" }
+        logger.info { "Duplicates: ${stats.duplicates.toString().padStart(4, ' ')}" }
+        logger.info { "Failed: ${stats.failed.toString().padStart(4, ' ')}" }
     }
 
 }
