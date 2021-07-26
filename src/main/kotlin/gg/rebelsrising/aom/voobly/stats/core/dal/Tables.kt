@@ -35,7 +35,7 @@ object PlayerDataTable : Table("player_data") {
     )
     val playerId = integer("player_id").index()
     val name = varchar("name", 32).index()
-    val teamName = varchar("team_name", 48)
+    val teamUrl = varchar("team_name", 48)
     val teamTag = varchar("team_tag", 16)
     val civ = enumerationByName("civ", 16, Civ::class).index()
     val team = byte("team")

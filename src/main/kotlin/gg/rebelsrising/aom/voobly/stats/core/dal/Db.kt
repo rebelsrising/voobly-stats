@@ -187,8 +187,8 @@ object Db {
                 this[PlayerDataTable.matchId] = match
                 this[PlayerDataTable.playerId] = p.playerId
                 this[PlayerDataTable.name] = p.name
-                this[PlayerDataTable.teamName] = p.teamName
-                this[PlayerDataTable.teamTag] = p.teamUrl
+                this[PlayerDataTable.teamUrl] = p.teamUrl
+                this[PlayerDataTable.teamTag] = p.teamTag
                 this[PlayerDataTable.civ] = p.civ
                 this[PlayerDataTable.team] = p.team
                 this[PlayerDataTable.newRating] = p.newRating

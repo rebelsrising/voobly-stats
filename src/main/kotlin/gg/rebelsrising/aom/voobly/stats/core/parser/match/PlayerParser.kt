@@ -28,7 +28,7 @@ class PlayerParser : Parser<ArrayList<Player>> {
 
         var name = ""
         var id = ""
-        var teamName = ""
+        var teamTag = ""
         var teamUrl = ""
 
         for (elem in a) {
@@ -36,12 +36,12 @@ class PlayerParser : Parser<ArrayList<Player>> {
                 name = elem.text()
                 id = elem.attr("href").substringAfterLast("/")
             } else {
-                teamName = elem.text()
+                teamTag = elem.text()
                 teamUrl = elem.attr("href").substringAfter("://").substringBefore(".")
             }
         }
 
-        logger.debug { "ID: $id Name: $name Team Name: $teamName Team URL: $teamUrl" }
+        logger.debug { "ID: $id Name: $name Team Name: $teamTag Team URL: $teamUrl" }
 
         // Img: Civ.
         val img = e.select("img")
@@ -61,7 +61,7 @@ class PlayerParser : Parser<ArrayList<Player>> {
         return Player(
             id.toIntOrNull() ?: -1,
             name,
-            teamName,
+            teamTag,
             teamUrl,
             Civ.byId(civId.toIntOrNull() ?: -1),
             team.toByteOrNull() ?: -1,
