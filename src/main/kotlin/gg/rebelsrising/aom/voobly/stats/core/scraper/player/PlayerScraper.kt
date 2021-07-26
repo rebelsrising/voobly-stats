@@ -13,12 +13,7 @@ class PlayerScraper(
     val config: MatchIdScraperConfig
 ) : Scraper {
 
-    fun processPlayerJob(pendingJobsThreshold: Int = 100): Boolean {
-        if (Db.estimateNumPendingMatchJobs() > pendingJobsThreshold) {
-            // Don't do anything if we have too many pending match jobs.
-            return false
-        }
-
+    fun processPlayerJob(): Boolean {
         // Not too many pending match jobs, get player job and scrape the player's match history.
         val playerJob = Db.getPlayerJobForProcessing(ladder) ?: return false
 

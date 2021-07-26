@@ -157,16 +157,6 @@ object Db {
         }
     }
 
-    fun estimateNumPendingMatchJobs(): Int {
-        // Requires Postgres!
-        return transaction(Database.connect(db)) {
-            return@transaction exec("SELECT reltuples AS estimate FROM pg_class WHERE relname = '${MatchJobTable.tableName}';") {
-                it.next()
-                return@exec it.getInt(1)
-            }
-        } ?: 0 // If this fails, something went very wrong.
-    }
-
     fun writeMatchAndUpdateJob(m: Match) {
         transaction(Database.connect(db)) {
             val match = MatchTable.insert {
