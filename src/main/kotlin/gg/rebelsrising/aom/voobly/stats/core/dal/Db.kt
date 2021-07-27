@@ -58,7 +58,7 @@ object Db {
     }
 
     fun matchExists(id: Int): Boolean {
-        return transaction(Database.connect(db)) {
+        return transaction {
             matchExistsQuery(id).invoke()
         }
     }
@@ -107,7 +107,7 @@ object Db {
 
     // TODO Replace scrape result with bool.
     fun insertMatchJobIfNotScrapedOrDuplicate(matchJob: MatchScrapeJob): ScrapeResult {
-        return transaction(Database.connect(db)) {
+        return transaction {
             if (matchExistsQuery(matchJob).invoke()) {
                 return@transaction ScrapeResult.DUPLICATE
             }
@@ -125,7 +125,7 @@ object Db {
 
     // TODO Replace scrape result with bool.
     fun insertPlayerJobIfNotDuplicate(j: PlayerScrapeJob): ScrapeResult {
-        return transaction(Database.connect(db)) {
+        return transaction {
             if (playerJobExistsQuery(j).invoke()) {
                 return@transaction ScrapeResult.DUPLICATE
             }
@@ -138,7 +138,7 @@ object Db {
     }
 
     fun updatePlayerJob(job: PlayerScrapeJob) {
-        return transaction(Database.connect(db)) {
+        return transaction {
             PlayerJobTable.update({ PlayerJobTable.playerId eq job.id }) {
                 // Don't update ID, ladder, or indexing time.
                 it[status] = job.status
@@ -148,7 +148,7 @@ object Db {
     }
 
     fun updateMatchJob(job: MatchScrapeJob) {
-        return transaction(Database.connect(db)) {
+        return transaction {
             MatchJobTable.update({ MatchJobTable.matchId eq job.id }) {
                 // Don't update ID, ladder, or indexing time.
                 it[status] = job.status
@@ -158,7 +158,7 @@ object Db {
     }
 
     fun writeMatchAndUpdateJob(m: Match) {
-        transaction(Database.connect(db)) {
+        transaction {
             val match = MatchTable.insert {
                 it[matchId] = m.matchId
                 it[ladder] = m.ladder
@@ -197,7 +197,7 @@ object Db {
         targetLadder: Ladder,
         lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)
     ): PlayerScrapeJob? {
-        return transaction(Database.connect(db)) {
+        return transaction {
             val job = PlayerJobTable.select {
                 // Correct ladder && (status == open || (status == processing && not recently processed)).
                 (PlayerJobTable.ladder eq targetLadder) and
@@ -226,7 +226,7 @@ object Db {
         targetLadder: Ladder,
         lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)
     ): List<MatchScrapeJob> {
-        return transaction(Database.connect(db)) {
+        return transaction {
             val jobs = MatchJobTable.select {
                 // Correct ladder && (status == open || (status == processing|delayed && not recently processed)).
                 (MatchJobTable.ladder eq targetLadder) and
