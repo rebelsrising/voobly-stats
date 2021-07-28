@@ -99,7 +99,17 @@ class MatchScraper(
             return INSUFFICIENT_INFO
         }
 
-        Db.writeMatchAndUpdateJob(m)
+        try {
+            Db.writeMatchAndUpdateJob(m)
+        } catch (e: Exception) {
+            job.status = MatchScrapeStatus.FAILED
+
+            Db.updateMatchJob(job)
+
+            logger.error { "Failed to write match with ID ${job.id}!" }
+
+            return WRITE_ERROR
+        }
 
         logger.debug { "Successfully wrote match to database." }
 

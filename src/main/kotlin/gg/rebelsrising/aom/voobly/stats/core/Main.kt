@@ -16,8 +16,6 @@ fun main() {
     Db.connect(config.database)
     Db.createTables()
 
-    // TODO Set all PROCESSING jobs to OPEN.
-
     Thread(PlayerIdScraper(s, Ladder.AOT_1X, config.playerIdScraper)).start()
     Thread(PlayerScraper(s, Ladder.AOT_1X, config.matchIdScraper)).start()
     Thread(MatchScraper(s, Ladder.AOT_1X, config.matchScraper)).start()
