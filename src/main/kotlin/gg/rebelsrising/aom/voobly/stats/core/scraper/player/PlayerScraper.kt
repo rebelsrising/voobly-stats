@@ -37,7 +37,7 @@ class PlayerScraper(
                     Thread.sleep(config.idleSleep)
                 }
             } catch (e: Exception) {
-                logger.error(e) { " Exception in PlayerScraper occurred! " }
+                logger.error(e) { "Exception in PlayerScraper occurred!" }
             }
         }
     }

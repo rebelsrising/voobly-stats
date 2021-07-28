@@ -47,7 +47,7 @@ class PlayerIdScraper(
 
                 Thread.sleep((MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
             } catch (e: Exception) {
-                logger.error(e) { " Exception in PlayerIdScraper occurred! " }
+                logger.error(e) { "Exception in PlayerIdScraper occurred!" }
             }
         }
     }

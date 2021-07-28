@@ -45,7 +45,7 @@ class LadderScraper(
 
                 Thread.sleep((MILLIS_PER_HOUR) / max(1, config.hourlyInterval) - delta)
             } catch (e: Exception) {
-                logger.error(e) { " Exception in LadderScraper occurred! " }
+                logger.error(e) { "Exception in LadderScraper occurred!" }
             }
         }
     }
