@@ -6,6 +6,9 @@ import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Scraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 class PlayerScraper(
     val session: Session,
@@ -28,9 +31,13 @@ class PlayerScraper(
 
     override fun run() {
         while (true) {
-            if (!processPlayerJob()) {
-                // Happens if we have plenty of match IDs with status OPEN or no OPEN player jobs.
-                Thread.sleep(config.idleSleep)
+            try {
+                if (!processPlayerJob()) {
+                    // Happens if we have plenty of match IDs with status OPEN or no OPEN player jobs.
+                    Thread.sleep(config.idleSleep)
+                }
+            } catch (e: Exception) {
+                logger.error(e) { " Exception in PlayerScraper occurred! " }
             }
         }
     }

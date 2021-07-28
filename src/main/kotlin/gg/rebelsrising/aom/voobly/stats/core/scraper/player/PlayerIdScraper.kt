@@ -10,9 +10,12 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_RANKING
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import mu.KotlinLogging
 import org.joda.time.DateTime
 import org.joda.time.Period
 import kotlin.math.max
+
+private val logger = KotlinLogging.logger {}
 
 class PlayerIdScraper(
     session: Session,
@@ -33,15 +36,19 @@ class PlayerIdScraper(
 
     override fun run() {
         while (true) {
-            // TODO Consider using something like https://stackoverflow.com/questions/25296718/repeat-an-action-every-2-seconds-in-java here.
+            try {
+                // TODO Consider using something like https://stackoverflow.com/questions/25296718/repeat-an-action-every-2-seconds-in-java here.
 
-            val currTime = DateTime.now()
+                val currTime = DateTime.now()
 
-            scrapePageBrowser()
+                scrapePageBrowser()
 
-            val delta = Period(currTime, DateTime.now()).millis
+                val delta = Period(currTime, DateTime.now()).millis
 
-            Thread.sleep((MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
+                Thread.sleep((MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
+            } catch (e: Exception) {
+                logger.error(e) { " Exception in PlayerIdScraper occurred! " }
+            }
         }
     }
 

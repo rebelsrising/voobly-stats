@@ -10,9 +10,12 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_MATCHES
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import mu.KotlinLogging
 import org.joda.time.DateTime
 import org.joda.time.Period
 import kotlin.math.max
+
+private val logger = KotlinLogging.logger {}
 
 class LadderScraper(
     session: Session,
@@ -33,13 +36,17 @@ class LadderScraper(
 
     override fun run() {
         while (true) {
-            val currTime = DateTime.now()
+            try {
+                val currTime = DateTime.now()
 
-            scrapePageBrowser()
+                scrapePageBrowser()
 
-            val delta = Period(currTime, DateTime.now()).millis
+                val delta = Period(currTime, DateTime.now()).millis
 
-            Thread.sleep((MILLIS_PER_HOUR) / max(1, config.hourlyInterval) - delta)
+                Thread.sleep((MILLIS_PER_HOUR) / max(1, config.hourlyInterval) - delta)
+            } catch (e: Exception) {
+                logger.error(e) { " Exception in LadderScraper occurred! " }
+            }
         }
     }
 

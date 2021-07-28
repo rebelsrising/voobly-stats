@@ -131,8 +131,12 @@ class MatchScraper(
 
     override fun run() {
         while (true) {
-            if (!scrapeMatchJobBatch()) {
-                Thread.sleep(config.idleSleep)
+            try {
+                if (!scrapeMatchJobBatch()) {
+                    Thread.sleep(config.idleSleep)
+                }
+            } catch (e: Exception) {
+                logger.error(e) { " Exception in MatchScraper occurred! " }
             }
         }
     }
