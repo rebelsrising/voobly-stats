@@ -86,8 +86,8 @@ class MatchScraper(
         if (!m.isComplete(config.requireMap)) {
             logger.debug { "Incomplete information for match!" }
 
-            // TODO Replace this check with a timestamp check (requires MatchScrapeJob refactor)?
-            // Currently, the delay between reprocessing is exclusively defined by lastProcessingThresholdMins.
+            // The delay between reprocessing is defined via the lastProcessingThresholdMins config parameter.
+            // TODO This may not be necessary (delaying makes no sense if lastProcessingThresholdMins is > ~5 minutes).
             if (job.status == MatchScrapeStatus.DELAYED) {
                 job.status = MatchScrapeStatus.FAILED
             } else {

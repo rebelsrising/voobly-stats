@@ -10,11 +10,15 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerScraper
 
 fun main() {
 
+    // TODO Add CLI.
+
     val config = Config.load(Config.DEFAULT_CONFIG_FILE)
     val s = Session(config.voobly).login()
 
     Db.connect(config.database)
     Db.createTables()
+
+    // TODO Reset entries from PROCESSING to OPEN.
 
     Thread(PlayerIdScraper(s, Ladder.AOT_1X, config.playerIdScraper)).start()
     Thread(PlayerScraper(s, Ladder.AOT_1X, config.matchIdScraper)).start()
