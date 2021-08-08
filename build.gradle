@@ -77,6 +77,10 @@ dependencies {
     // https://mvnrepository.com/artifact/io.github.microutils/kotlin-logging-jvm
     implementation group: 'io.github.microutils', name: 'kotlin-logging-jvm', version: "$kotlinLoggingVersion"
 
+    /** CLI. */
+    // https://mvnrepository.com/artifact/com.github.ajalt.clikt/clikt-jvm
+    implementation group: 'com.github.ajalt.clikt', name: 'clikt-jvm', version: "$cliktVersion"
+
     /** JSON SERIALIZATION. */
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-json', version: "$kotlinxVersion"

@@ -1,5 +1,9 @@
 package gg.rebelsrising.aom.voobly.stats.core
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.enum
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
@@ -8,20 +12,32 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.match.MatchScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerIdScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerScraper
 
-fun main() {
+class VooblyScraper : CliktCommand() {
 
-    // TODO Add CLI.
+    val config: String by option(help = "The path of the configuration file to load.")
+        .default(Config.DEFAULT_CONFIG_FILE)
 
-    val config = Config.load(Config.DEFAULT_CONFIG_FILE)
-    val s = Session(config.voobly).login()
+    val ladder: Ladder by option(help = "The ladder to scrape.")
+        .enum<Ladder>()
+        .default(Ladder.AOT_1X)
 
-    Db.connect(config.database)
-    Db.createTables()
+    // TODO Add options to specify number of workers.
+    // TODO Add option to scrape recent games instead of players.
 
-    // TODO Reset entries from PROCESSING to OPEN.
+    override fun run() {
+        val config = Config.load(config)
+        val s = Session(config.voobly).login()
 
-    Thread(PlayerIdScraper(s, Ladder.AOT_1X, config.playerIdScraper)).start()
-    Thread(PlayerScraper(s, Ladder.AOT_1X, config.matchIdScraper)).start()
-    Thread(MatchScraper(s, Ladder.AOT_1X, config.matchScraper)).start()
+        Db.connect(config.database)
+        Db.createTables()
+
+        // TODO Reset entries from PROCESSING to OPEN.
+
+        Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
+        Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
+        Thread(MatchScraper(s, ladder, config.matchScraper)).start()
+    }
 
 }
+
+fun main(args: Array<String>): Unit = VooblyScraper().main(args)
