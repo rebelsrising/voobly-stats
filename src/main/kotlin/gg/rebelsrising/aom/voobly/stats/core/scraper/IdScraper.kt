@@ -63,7 +63,7 @@ abstract class IdScraper(
     }
 
     fun scrapePageBrowser() {
-        val stats = ScrapeStats()
+        val s = ScrapeStats()
         var currPage = INIT_PAGE_ID
         var currStats: ScrapeStats
 
@@ -72,18 +72,17 @@ abstract class IdScraper(
 
             logger.info { "Obtained ${currStats.new} new IDs and ${currStats.duplicates} duplicates (page ID: $currPage)." }
 
-            stats += currStats
+            s += currStats
 
             Thread.sleep(sleepMillis)
 
             currPage++
         } while (currStats.total > 0)
 
-        logger.info { "Stats from scraping up to browser page $currPage (page ID: ${currPage - 1}):" }
-        logger.info { "Checked: ${stats.total.toString().padStart(4, ' ')}" }
-        logger.info { "New: ${stats.new.toString().padStart(4, ' ')}" }
-        logger.info { "Duplicates: ${stats.duplicates.toString().padStart(4, ' ')}" }
-        logger.info { "Failed: ${stats.failed.toString().padStart(4, ' ')}" }
+        logger.info {
+            "Scraped up to browser page ${currPage - 1} (checked: ${s.total}, new: ${s.new}," +
+                    " duplicates: ${s.duplicates}, failed: ${s.failed})."
+        }
     }
 
 }

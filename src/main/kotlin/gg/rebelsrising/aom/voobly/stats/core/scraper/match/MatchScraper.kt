@@ -146,10 +146,10 @@ class MatchScraper(
             Thread.sleep(config.busySleep)
         }
 
-        logger.info(
+        logger.info {
             "Processed ${s.total} matches in batch (new: ${s.new}, duplicates: ${s.duplicates}," +
                     " failed: ${s.failed})."
-        )
+        }
 
         return true
     }
