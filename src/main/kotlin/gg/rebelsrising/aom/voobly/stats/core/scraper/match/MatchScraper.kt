@@ -28,11 +28,13 @@ class MatchScraper(
 ) : Scraper {
 
     companion object {
+
         const val MATCH_VIEW = "match/view/"
 
         fun idToMatchUrl(id: Int): String {
             return VOOBLY_WWW + MATCH_VIEW + id
         }
+
     }
 
     private val matchParser = MatchParser()

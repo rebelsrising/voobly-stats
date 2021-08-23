@@ -10,8 +10,10 @@ private val logger = KotlinLogging.logger {}
 class LadderParser : Parser<Ladder> {
 
     companion object {
+
         private const val CSS_QUERY = "#content div table tr td a"
         private const val LADDER_VIEW = "ladder/view/"
+
     }
 
     override fun parse(doc: Document): Ladder {

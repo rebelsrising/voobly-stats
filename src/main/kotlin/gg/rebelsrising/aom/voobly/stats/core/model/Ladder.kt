@@ -9,8 +9,11 @@ enum class Ladder(val mainUrl: String, val idUrl: String) {
     AOT_DM("Age-of-Mythology-The-Titans/AoT-Deathmatch", "328");
 
     companion object {
+
         private val map = values().associateBy(Ladder::mainUrl)
+
         fun byUrl(url: String): Ladder = map.getOrDefault(url, UNKNOWN)
+
     }
 
 }

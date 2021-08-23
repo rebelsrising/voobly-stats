@@ -33,8 +33,6 @@ class VooblyScraper : CliktCommand() {
         .enum<Mode>()
         .default(Mode.FULL)
 
-    // TODO Add options to specify number of workers.
-
     override fun run() {
         val config = Config.load(config)
         val s = Session(config.voobly).login()
@@ -51,6 +49,7 @@ class VooblyScraper : CliktCommand() {
             Thread(RecentScraper(s, ladder, config.ladderScraper)).start()
         }
 
+        // TODO Add options to specify number of workers.
         Thread(MatchScraper(s, ladder, config.matchScraper)).start()
     }
 

@@ -14,12 +14,14 @@ abstract class IdScraper(
 ) : Scraper {
 
     companion object {
+
         const val INIT_PAGE_ID = 0
         const val INVALID_ID = -1
 
         fun parseId(idString: String): Int {
             return idString.toIntOrNull() ?: -1
         }
+
     }
 
     // TODO Add scraper name.

@@ -11,7 +11,9 @@ private val logger = KotlinLogging.logger {}
 class TopPlayerIdParser : Parser<ArrayList<String>> {
 
     companion object {
+
         private const val CSS_QUERY = "tr a[href]"
+
     }
 
     override fun parse(doc: Document): ArrayList<String> {

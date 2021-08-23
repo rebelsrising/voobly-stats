@@ -41,9 +41,6 @@ object Db {
         }
     }
 
-    // TODO Use default database for tx manager.
-    // See https://github.com/JetBrains/Exposed/wiki/Transactions
-
     fun matchExistsQuery(id: Int): () -> Boolean {
         return {
             MatchTable.slice(intLiteral(1))
@@ -192,7 +189,6 @@ object Db {
         }
     }
 
-    // TODO Consider removing the threshold - upon a crash/restart we should just reset all elements in PROCESSING state.
     fun getPlayerJobForProcessing(
         targetLadder: Ladder,
         lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)

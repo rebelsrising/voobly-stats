@@ -20,13 +20,23 @@ data class Config(
 ) {
 
     companion object {
+
         const val DEFAULT_CONFIG_FILE = "config.json"
+
+        lateinit var globalConfig: Config
 
         fun load(config: String): Config {
             val jsonString = File(config).readText()
 
             return Json.decodeFromString(serializer(), jsonString)
         }
+
+        fun loadConfigToGlobal(config: String): Config {
+            globalConfig = load(config)
+
+            return globalConfig
+        }
+
     }
 
 }

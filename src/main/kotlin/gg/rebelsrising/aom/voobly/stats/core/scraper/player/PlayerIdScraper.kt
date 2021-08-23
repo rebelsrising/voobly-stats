@@ -24,7 +24,9 @@ class PlayerIdScraper(
 ) : IdScraper(session, ladder, config.busySleep) {
 
     companion object {
+
         private const val MILLIS_PER_DAY: Long = 86_400_000
+
     }
 
     override val urlPrefix = VOOBLY_WWW + LADDER_RANKING + ladder.idUrl

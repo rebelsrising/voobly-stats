@@ -9,8 +9,10 @@ private val logger = KotlinLogging.logger {}
 class RecIdParser : Parser<String> {
 
     companion object {
+
         private const val CSS_QUERY = ".content table tbody tr td table tbody tr td a"
         private const val FILES_VIEW = "files/view/"
+
     }
 
     override fun parse(doc: Document): String {

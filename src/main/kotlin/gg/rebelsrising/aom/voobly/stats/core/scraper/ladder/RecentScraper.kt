@@ -24,7 +24,9 @@ class RecentScraper(
 ) : IdScraper(session, ladder, config.busySleep) {
 
     companion object {
+
         private const val MILLIS_PER_HOUR: Long = 3_600_000
+
     }
 
     override val urlPrefix = VOOBLY_WWW + LADDER_MATCHES + ladder.idUrl

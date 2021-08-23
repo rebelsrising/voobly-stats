@@ -12,6 +12,7 @@ private val logger = KotlinLogging.logger {}
 class PlayerParser : Parser<ArrayList<Player>> {
 
     companion object {
+
         private const val CSS_QUERY =
             ".content > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr"
 
@@ -20,6 +21,7 @@ class PlayerParser : Parser<ArrayList<Player>> {
         private const val RES_CIVS_SUFFIX = "civs/"
 
         private const val CIV_URL = RES_CIVS_PREFIX + "AOM/" + RES_CIVS_SUFFIX
+
     }
 
     private fun parsePlayer(e: Element): Player {

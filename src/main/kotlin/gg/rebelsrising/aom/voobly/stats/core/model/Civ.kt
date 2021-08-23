@@ -19,8 +19,11 @@ enum class Civ(val id: Int) {
     GAIA(11);
 
     companion object {
+
         private val map = values().associateBy(Civ::id)
+
         fun byId(id: Int): Civ = map.getOrDefault(id, UNKNOWN)
+
     }
 
 }

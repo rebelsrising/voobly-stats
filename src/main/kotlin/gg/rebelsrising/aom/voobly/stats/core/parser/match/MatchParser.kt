@@ -11,7 +11,9 @@ private val logger = KotlinLogging.logger {}
 class MatchParser : Parser<Match> {
 
     companion object {
+
         private const val TABLE_CSS_QUERY = ".content table tbody tr td table tbody tr td"
+
     }
 
     // TODO Better exception handling/escalation.
