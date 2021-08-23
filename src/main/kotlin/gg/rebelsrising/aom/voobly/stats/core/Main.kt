@@ -8,11 +8,19 @@ import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ladder.RecentScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.match.MatchScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerIdScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerScraper
 
 class VooblyScraper : CliktCommand() {
+
+    enum class Mode {
+
+        FULL,
+        RECENT_GAMES
+
+    }
 
     val config: String by option(help = "The path of the configuration file to load.")
         .default(Config.DEFAULT_CONFIG_FILE)
@@ -21,8 +29,11 @@ class VooblyScraper : CliktCommand() {
         .enum<Ladder>()
         .default(Ladder.AOT_1X)
 
+    val mode: Mode by option(help = "The mode to run.")
+        .enum<Mode>()
+        .default(Mode.FULL)
+
     // TODO Add options to specify number of workers.
-    // TODO Add option to scrape recent games instead of players.
 
     override fun run() {
         val config = Config.load(config)
@@ -33,8 +44,13 @@ class VooblyScraper : CliktCommand() {
 
         // TODO Reset entries from PROCESSING to OPEN.
 
-        Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
-        Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
+        if (mode == Mode.FULL) {
+            Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
+            Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
+        } else {
+            Thread(RecentScraper(s, ladder, config.ladderScraper)).start()
+        }
+
         Thread(MatchScraper(s, ladder, config.matchScraper)).start()
     }
 

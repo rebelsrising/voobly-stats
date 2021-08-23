@@ -17,7 +17,7 @@ import kotlin.math.max
 
 private val logger = KotlinLogging.logger {}
 
-class LadderScraper(
+class RecentScraper(
     session: Session,
     ladder: Ladder,
     val config: LadderScraperConfig
