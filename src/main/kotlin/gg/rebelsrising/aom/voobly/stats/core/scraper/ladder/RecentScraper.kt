@@ -1,6 +1,6 @@
 package gg.rebelsrising.aom.voobly.stats.core.scraper.ladder
 
-import gg.rebelsrising.aom.voobly.stats.core.config.scraper.LadderScraperConfig
+import gg.rebelsrising.aom.voobly.stats.core.config.scraper.RecentScraperConfig
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob
@@ -20,12 +20,12 @@ private val logger = KotlinLogging.logger {}
 class RecentScraper(
     session: Session,
     val ladder: Ladder,
-    val config: LadderScraperConfig
+    val config: RecentScraperConfig
 ) : IdScraper(session, config.busySleep) {
 
     companion object {
 
-        private const val MILLIS_PER_HOUR: Long = 3_600_000
+        private const val MILLIS_PER_DAY: Long = 86_400_000
 
     }
 
@@ -45,7 +45,7 @@ class RecentScraper(
 
                 val delta = Period(currTime, DateTime.now()).millis
 
-                Thread.sleep((MILLIS_PER_HOUR) / max(1, config.hourlyInterval) - delta)
+                Thread.sleep((MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
             } catch (e: Exception) {
                 logger.error(e) { "Exception in LadderScraper occurred!" }
             }

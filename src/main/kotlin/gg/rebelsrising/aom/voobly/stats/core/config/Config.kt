@@ -1,9 +1,9 @@
 package gg.rebelsrising.aom.voobly.stats.core.config
 
-import gg.rebelsrising.aom.voobly.stats.core.config.scraper.LadderScraperConfig
 import gg.rebelsrising.aom.voobly.stats.core.config.scraper.MatchIdScraperConfig
 import gg.rebelsrising.aom.voobly.stats.core.config.scraper.MatchScraperConfig
 import gg.rebelsrising.aom.voobly.stats.core.config.scraper.PlayerIdScraperConfig
+import gg.rebelsrising.aom.voobly.stats.core.config.scraper.RecentScraperConfig
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -16,7 +16,7 @@ data class Config(
     val matchScraper: MatchScraperConfig,
     val matchIdScraper: MatchIdScraperConfig,
     val playerIdScraper: PlayerIdScraperConfig,
-    val ladderScraper: LadderScraperConfig
+    val recentScraper: RecentScraperConfig
 ) {
 
     companion object {

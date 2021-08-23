@@ -46,7 +46,7 @@ class VooblyScraper : CliktCommand() {
             Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
             Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
         } else {
-            Thread(RecentScraper(s, ladder, config.ladderScraper)).start()
+            Thread(RecentScraper(s, ladder, config.recentScraper)).start()
         }
 
         // TODO Add options to specify number of workers.

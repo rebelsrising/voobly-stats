@@ -25,8 +25,8 @@
     "busySleep": 10000,
     "dailyInterval": 2
   },
-  "ladderScraper": {
+  "recentScraper": {
     "busySleep": 5000,
-    "hourlyInterval": 4
+    "dailyInterval": 24
   }
 }
