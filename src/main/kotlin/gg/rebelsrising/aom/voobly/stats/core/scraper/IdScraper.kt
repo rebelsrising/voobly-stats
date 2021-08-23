@@ -1,6 +1,5 @@
 package gg.rebelsrising.aom.voobly.stats.core.scraper
 
-import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.PAGEBROWSER
 import mu.KotlinLogging
@@ -9,7 +8,6 @@ private val logger = KotlinLogging.logger {}
 
 abstract class IdScraper(
     val session: Session,
-    val ladder: Ladder,
     val sleepMillis: Long
 ) : Scraper {
 

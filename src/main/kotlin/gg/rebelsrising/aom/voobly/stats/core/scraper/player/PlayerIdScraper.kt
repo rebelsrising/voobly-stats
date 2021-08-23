@@ -19,9 +19,9 @@ private val logger = KotlinLogging.logger {}
 
 class PlayerIdScraper(
     session: Session,
-    ladder: Ladder,
+    val ladder: Ladder,
     val config: PlayerIdScraperConfig
-) : IdScraper(session, ladder, config.busySleep) {
+) : IdScraper(session, config.busySleep) {
 
     companion object {
 

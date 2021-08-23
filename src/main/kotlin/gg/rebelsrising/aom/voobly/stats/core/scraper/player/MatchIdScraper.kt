@@ -15,13 +15,13 @@ class MatchIdScraper(
     session: Session,
     val pJob: PlayerScrapeJob,
     val config: MatchIdScraperConfig
-) : IdScraper(session, pJob.ladder, config.busySleep) {
+) : IdScraper(session, config.busySleep) {
 
-    override val urlPrefix = VOOBLY_WWW + USER_MATCHES + pJob.id + "/" + ladder.idUrl
+    override val urlPrefix = VOOBLY_WWW + USER_MATCHES + pJob.id + "/" + pJob.ladder.idUrl
     override val idParser = MatchIdParser()
 
     override fun processId(id: Int): ScrapeResult {
-        val ret = Db.insertMatchJobIfNotScrapedOrDuplicate(MatchScrapeJob(id, ladder))
+        val ret = Db.insertMatchJobIfNotScrapedOrDuplicate(MatchScrapeJob(id, pJob.ladder))
 
         // Update player job processing time.
         Db.updatePlayerJob(pJob)

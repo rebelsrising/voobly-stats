@@ -57,7 +57,7 @@ class MatchScraper(
     }
 
     fun processMatchJob(job: MatchScrapeJob): ScrapeResult {
-        logger.debug { "Checking match ID ${job.id}." }
+        logger.info { "Processing match ID ${job.id}." }
 
         if (Db.matchExists(job.id)) {
             logger.warn("Match ${job.id} has already been stored - this should not happen!")
@@ -86,7 +86,7 @@ class MatchScraper(
         }
 
         if (!m.isComplete(config.requireMap)) {
-            logger.debug { "Incomplete information for match!" }
+            logger.info { "Incomplete information for match with ID ${job.id}!" }
 
             // The delay between reprocessing is defined via the lastProcessingThresholdMins config parameter.
             // TODO This may not be necessary (delaying makes no sense if lastProcessingThresholdMins is > ~5 minutes).
@@ -113,7 +113,7 @@ class MatchScraper(
             return WRITE_ERROR
         }
 
-        logger.debug { "Successfully wrote match to database." }
+        logger.info { "Successfully wrote match with ID ${job.id} to database." }
 
         return SUCCESS
     }
@@ -129,14 +129,27 @@ class MatchScraper(
             return false
         }
 
-        // TODO Process stats.
-        val stats = ScrapeStats()
+        // Process stats.
+        val s = ScrapeStats()
 
         for (job in matchJobs) {
-            val result = processMatchJob(job)
+            when (processMatchJob(job)) {
+                SUCCESS -> s.new++
+                DUPLICATE -> s.duplicates++
+                INSUFFICIENT_INFO -> s.failed++
+                PARSE_ERROR -> s.failed++
+                WRITE_ERROR -> s.failed++
+            }
+
+            s.total++
 
             Thread.sleep(config.busySleep)
         }
+
+        logger.info(
+            "Processed ${s.total} matches in batch (new: ${s.new}, duplicates: ${s.duplicates}," +
+                    " failed: ${s.failed})."
+        )
 
         return true
     }

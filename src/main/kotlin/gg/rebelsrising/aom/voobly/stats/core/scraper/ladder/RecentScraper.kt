@@ -19,9 +19,9 @@ private val logger = KotlinLogging.logger {}
 
 class RecentScraper(
     session: Session,
-    ladder: Ladder,
+    val ladder: Ladder,
     val config: LadderScraperConfig
-) : IdScraper(session, ladder, config.busySleep) {
+) : IdScraper(session, config.busySleep) {
 
     companion object {
 
