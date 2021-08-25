@@ -17,21 +17,22 @@ class VooblyScraper : CliktCommand() {
 
     enum class Mode {
 
-        FULL,
-        RECENT_GAMES
+        PLAYER_GAMES,
+        RECENT_GAMES,
+        HYBRID
 
     }
 
-    val config: String by option(help = "The path of the configuration file to load.")
+    private val config: String by option(help = "The path of the configuration file to load.")
         .default(Config.DEFAULT_CONFIG_FILE)
 
-    val ladder: Ladder by option(help = "The ladder to scrape.")
+    private val ladder: Ladder by option(help = "The ladder to scrape.")
         .enum<Ladder>()
         .default(Ladder.AOT_1X)
 
-    val mode: Mode by option(help = "The mode to run.")
+    private val mode: Mode by option(help = "The mode to run.")
         .enum<Mode>()
-        .default(Mode.FULL)
+        .default(Mode.PLAYER_GAMES)
 
     override fun run() {
         val config = Config.load(config)
@@ -42,10 +43,12 @@ class VooblyScraper : CliktCommand() {
 
         // TODO Reset entries from PROCESSING to OPEN.
 
-        if (mode == Mode.FULL) {
+        if (mode == Mode.PLAYER_GAMES || mode == Mode.HYBRID) {
             Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
             Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
-        } else {
+        }
+
+        if (mode == Mode.RECENT_GAMES || mode == Mode.HYBRID) {
             Thread(RecentScraper(s, ladder, config.recentScraper)).start()
         }
 

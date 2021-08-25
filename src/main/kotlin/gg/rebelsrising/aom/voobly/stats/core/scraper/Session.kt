@@ -9,7 +9,8 @@ class Session(private val config: VooblyConfig) {
     companion object {
 
         const val CONTENT_OFFSET = 19 // Fixed post request content length, added to user/pass length.
-        const val USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0"
+        const val USER_AGENT =
+            "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405"
         const val LOGIN_URL = "https://www.voobly.com/login"
         const val LOGIN_AUTH_URL = "https://www.voobly.com/login/auth"
 
