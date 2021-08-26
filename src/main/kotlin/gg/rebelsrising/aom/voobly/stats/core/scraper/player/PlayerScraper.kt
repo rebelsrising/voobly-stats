@@ -15,8 +15,6 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
 
-private val logger = KotlinLogging.logger {}
-
 class PlayerHistoryScraper(
     session: Session,
     val pJob: PlayerScrapeJob,
@@ -49,15 +47,21 @@ class PlayerScraper(
     val config: IdScraperConfig
 ) : Scraper {
 
+    private val logger = KotlinLogging.logger {}
+
     fun processPlayerJob(): Boolean {
         // Not too many pending match jobs, get player job and scrape the player's match history.
         val playerJob = Db.getPlayerJobForProcessing(ladder) ?: return false
+
+        logger.info { "Scraping matches for player with ID ${playerJob.id}." }
 
         PlayerHistoryScraper(session, playerJob, config).scrapePageBrowser()
 
         playerJob.status = PlayerScrapeJob.PlayerScrapeStatus.OPEN
 
         Db.updatePlayerJob(playerJob)
+
+        logger.info { "Done scraping matches for player with ID ${playerJob.id}." }
 
         return true
     }

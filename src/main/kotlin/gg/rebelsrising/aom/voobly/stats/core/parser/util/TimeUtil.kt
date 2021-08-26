@@ -1,6 +1,8 @@
 package gg.rebelsrising.aom.voobly.stats.core.parser.util
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants.MINUTES_PER_HOUR
+import org.joda.time.DateTimeConstants.SECONDS_PER_HOUR
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 
@@ -33,7 +35,7 @@ object TimeUtil {
 
     fun getDuration(dirtyDuration: String): Int {
         val split = dirtyDuration.split(":")
-        return split[0].toInt() * 3600 + split[1].toInt() * 60 + split[2].toInt()
+        return split[0].toInt() * SECONDS_PER_HOUR + split[1].toInt() * MINUTES_PER_HOUR + split[2].toInt()
     }
 
 }

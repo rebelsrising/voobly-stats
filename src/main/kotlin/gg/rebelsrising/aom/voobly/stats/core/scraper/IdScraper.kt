@@ -56,7 +56,7 @@ abstract class IdScraper(
 
             when (processId(id)) {
                 ScrapeResult.SUCCESS -> currStats.new++
-                ScrapeResult.DUPLICATE -> currStats.duplicates
+                ScrapeResult.DUPLICATE -> currStats.duplicates++
                 else -> currStats.failed++
             }
         }
