@@ -2,9 +2,7 @@ package gg.rebelsrising.aom.voobly.stats.core.scraper
 
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.PAGEBROWSER
-import mu.KotlinLogging
-
-private val logger = KotlinLogging.logger {}
+import mu.KLogger
 
 abstract class IdScraper(
     val session: Session,
@@ -22,7 +20,7 @@ abstract class IdScraper(
 
     }
 
-    // TODO Add scraper name.
+    abstract val logger: KLogger
     abstract val urlPrefix: String
     abstract val idParser: Parser<ArrayList<String>>
 

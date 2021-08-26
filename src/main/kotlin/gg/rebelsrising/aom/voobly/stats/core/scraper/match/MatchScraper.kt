@@ -161,7 +161,7 @@ class MatchScraper(
                     Thread.sleep(config.idleSleep)
                 }
             } catch (e: Exception) {
-                logger.error(e) { "Exception in MatchScraper occurred!" }
+                logger.error(e) { "Caught exception while running!" }
             }
         }
     }

@@ -16,14 +16,13 @@ import org.joda.time.DateTime
 import org.joda.time.Period
 import kotlin.math.max
 
-private val logger = KotlinLogging.logger {}
-
 class LadderScraper(
     session: Session,
     val ladder: Ladder,
     val config: IdScraperDailyConfig
 ) : IdScraper(session, config.busySleep) {
 
+    override val logger = KotlinLogging.logger {}
     override val urlPrefix = VOOBLY_WWW + LADDER_RANKING + ladder.idUrl
     override val idParser = PlayerIdParser()
 
@@ -44,7 +43,7 @@ class LadderScraper(
 
                 Thread.sleep((ScraperConst.MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
             } catch (e: Exception) {
-                logger.error(e) { "Exception in LadderScraper occurred!" }
+                logger.error(e) { "Caught exception while running!" }
             }
         }
     }

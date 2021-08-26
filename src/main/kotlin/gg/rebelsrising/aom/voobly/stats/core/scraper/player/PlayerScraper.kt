@@ -22,6 +22,7 @@ class PlayerHistoryScraper(
     val config: IdScraperConfig
 ) : IdScraper(session, config.busySleep) {
 
+    override val logger = KotlinLogging.logger {}
     override val urlPrefix = VOOBLY_WWW + USER_MATCHES + pJob.id + "/" + pJob.ladder.idUrl
     override val idParser = MatchIdParser()
 
@@ -68,7 +69,7 @@ class PlayerScraper(
                     Thread.sleep(config.idleSleep)
                 }
             } catch (e: Exception) {
-                logger.error(e) { "Exception in PlayerScraper occurred!" }
+                logger.error(e) { "Caught exception while running!" }
             }
         }
     }
