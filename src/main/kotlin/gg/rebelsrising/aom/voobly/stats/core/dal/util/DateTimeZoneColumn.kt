@@ -42,7 +42,9 @@ class DateTimeZoneColumnType : ColumnType(), IDateColumnType {
 
     override fun valueFromDB(value: Any): Any = when (value) {
         is DateTime -> value
-        is String -> DateTime.parse(value, formatterForDateTimeString(value))
+        is String -> {
+            DateTime.parse(value, formatterForDateTimeString(value))
+        }
         else -> valueFromDB(value.toString()) // Will take the String branch above.
     }
 
@@ -68,10 +70,12 @@ class DateTimeZoneColumnType : ColumnType(), IDateColumnType {
 
     private fun dateTimeWithFractionFormat(fraction: Int): DateTimeFormatter {
         val baseFormat = "YYYY-MM-dd HH:mm:ss"
-        val newFormat = if (fraction in 1..9)
+        val newFormat = if (fraction in 1..9) {
             (1..fraction).joinToString(prefix = "$baseFormat.", separator = "") { "S" }
-        else
+        } else {
             baseFormat
+        }
+
         return DateTimeFormat.forPattern(newFormat)
     }
 

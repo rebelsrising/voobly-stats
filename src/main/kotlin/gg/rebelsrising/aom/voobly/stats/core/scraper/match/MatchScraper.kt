@@ -60,8 +60,8 @@ class MatchScraper(
         logger.info { "Processing match ID ${job.id}." }
 
         if (Db.matchExists(job.id)) {
-            logger.warn("Match ${job.id} has already been stored - this should not happen!")
-            logger.warn("Marking entry in match job table as done.")
+            logger.warn { "Match ${job.id} has already been stored - this should not happen!" }
+            logger.warn { "Marking entry in match job table as done." }
 
             job.status = MatchScrapeStatus.DONE
 

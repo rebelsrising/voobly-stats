@@ -8,16 +8,16 @@ import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
-import gg.rebelsrising.aom.voobly.stats.core.scraper.ladder.RecentScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.match.MatchScraper
-import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerIdScraper
+import gg.rebelsrising.aom.voobly.stats.core.scraper.player.LadderScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerScraper
+import gg.rebelsrising.aom.voobly.stats.core.scraper.recent.RecentScraper
 
 class VooblyScraper : CliktCommand() {
 
     enum class Mode {
 
-        PLAYER_GAMES,
+        PLAYER_LADDER,
         RECENT_GAMES,
         HYBRID
 
@@ -32,7 +32,7 @@ class VooblyScraper : CliktCommand() {
 
     private val mode: Mode by option(help = "The mode to run.")
         .enum<Mode>()
-        .default(Mode.PLAYER_GAMES)
+        .default(Mode.PLAYER_LADDER)
 
     override fun run() {
         val config = Config.load(config)
@@ -43,9 +43,9 @@ class VooblyScraper : CliktCommand() {
 
         // TODO Reset entries from PROCESSING to OPEN.
 
-        if (mode == Mode.PLAYER_GAMES || mode == Mode.HYBRID) {
-            Thread(PlayerIdScraper(s, ladder, config.playerIdScraper)).start()
-            Thread(PlayerScraper(s, ladder, config.matchIdScraper)).start()
+        if (mode == Mode.PLAYER_LADDER || mode == Mode.HYBRID) {
+            Thread(LadderScraper(s, ladder, config.ladderScraper)).start()
+            Thread(PlayerScraper(s, ladder, config.playerScraper)).start()
         }
 
         if (mode == Mode.RECENT_GAMES || mode == Mode.HYBRID) {

@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document
 
 private val logger = KotlinLogging.logger {}
 
-class TopPlayerIdParser : Parser<ArrayList<String>> {
+class PlayerIdParser : Parser<ArrayList<String>> {
 
     companion object {
 

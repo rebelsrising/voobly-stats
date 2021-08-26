@@ -17,11 +17,11 @@
     "requireMap": false,
     "batchSize": 10
   },
-  "matchIdScraper": {
+  "playerScraper": {
     "busySleep": 2500,
     "idleSleep": 1000
   },
-  "playerIdScraper": {
+  "ladderScraper": {
     "busySleep": 10000,
     "dailyInterval": 2
   },

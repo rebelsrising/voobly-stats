@@ -1,13 +1,14 @@
-package gg.rebelsrising.aom.voobly.stats.core.scraper.ladder
+package gg.rebelsrising.aom.voobly.stats.core.scraper.player
 
-import gg.rebelsrising.aom.voobly.stats.core.config.scraper.RecentScraperConfig
+import gg.rebelsrising.aom.voobly.stats.core.config.scraper.IdScraperDailyConfig
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
-import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob
-import gg.rebelsrising.aom.voobly.stats.core.parser.id.MatchIdParser
+import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob
+import gg.rebelsrising.aom.voobly.stats.core.parser.id.PlayerIdParser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.IdScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
-import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_MATCHES
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_RANKING
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
@@ -17,35 +18,31 @@ import kotlin.math.max
 
 private val logger = KotlinLogging.logger {}
 
-class RecentScraper(
+class LadderScraper(
     session: Session,
     val ladder: Ladder,
-    val config: RecentScraperConfig
+    val config: IdScraperDailyConfig
 ) : IdScraper(session, config.busySleep) {
 
-    companion object {
-
-        private const val MILLIS_PER_DAY: Long = 86_400_000
-
-    }
-
-    override val urlPrefix = VOOBLY_WWW + LADDER_MATCHES + ladder.idUrl
-    override val idParser = MatchIdParser()
+    override val urlPrefix = VOOBLY_WWW + LADDER_RANKING + ladder.idUrl
+    override val idParser = PlayerIdParser()
 
     override fun processId(id: Int): ScrapeResult {
-        return Db.insertMatchJobIfNotScrapedOrDuplicate(MatchScrapeJob(id, ladder))
+        return Db.insertPlayerJobIfNotDuplicate(PlayerScrapeJob(id, ladder))
     }
 
     override fun run() {
         while (true) {
             try {
+                // TODO Consider using something like https://stackoverflow.com/questions/25296718/repeat-an-action-every-2-seconds-in-java here.
+
                 val currTime = DateTime.now()
 
                 scrapePageBrowser()
 
                 val delta = Period(currTime, DateTime.now()).millis
 
-                Thread.sleep((MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
+                Thread.sleep((ScraperConst.MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
             } catch (e: Exception) {
                 logger.error(e) { "Exception in LadderScraper occurred!" }
             }

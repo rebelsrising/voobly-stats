@@ -12,4 +12,6 @@ object ScraperConst {
     const val MATCH_VIEW = "match/view/"
     const val PAGEBROWSER = "#pagebrowser"
 
+    const val MILLIS_PER_DAY: Long = 86_400_000
+
 }
