@@ -14,6 +14,8 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult.*
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeStats
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Scraper
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.MATCH_VIEW
+import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.SCRAPER_EXCEPTION_MSG
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
@@ -28,8 +30,6 @@ class MatchScraper(
 ) : Scraper {
 
     companion object {
-
-        const val MATCH_VIEW = "match/view/"
 
         fun idToMatchUrl(id: Int): String {
             return VOOBLY_WWW + MATCH_VIEW + id
@@ -161,7 +161,7 @@ class MatchScraper(
                     Thread.sleep(config.idleSleep)
                 }
             } catch (e: Exception) {
-                logger.error(e) { "Caught exception while running!" }
+                logger.error(e) { SCRAPER_EXCEPTION_MSG }
             }
         }
     }

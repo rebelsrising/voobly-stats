@@ -3,6 +3,10 @@ package gg.rebelsrising.aom.voobly.stats.core.scraper
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.PAGEBROWSER
 import mu.KLogger
+import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
+import org.joda.time.Period
+import kotlin.math.max
 
 abstract class IdScraper(
     val session: Session,
@@ -80,6 +84,22 @@ abstract class IdScraper(
         logger.info {
             "Scraped up to browser page ${currPage - 1} (checked: ${s.total}, new: ${s.new}," +
                     " duplicates: ${s.duplicates}, failed: ${s.failed})."
+        }
+    }
+
+    fun scrapePageBrowserDaily(numRunsPerDay: Long) {
+        while (true) {
+            try {
+                val currTime = DateTime.now()
+
+                scrapePageBrowser()
+
+                val delta = Period(currTime, DateTime.now()).millis
+
+                Thread.sleep((DateTimeConstants.MILLIS_PER_DAY) / max(1, numRunsPerDay) - delta)
+            } catch (e: Exception) {
+                logger.error(e) { ScraperConst.SCRAPER_EXCEPTION_MSG }
+            }
         }
     }
 

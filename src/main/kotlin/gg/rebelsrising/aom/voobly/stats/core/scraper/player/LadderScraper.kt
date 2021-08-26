@@ -7,14 +7,10 @@ import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob
 import gg.rebelsrising.aom.voobly.stats.core.parser.id.PlayerIdParser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.IdScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
-import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_RANKING
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
-import org.joda.time.DateTime
-import org.joda.time.Period
-import kotlin.math.max
 
 class LadderScraper(
     session: Session,
@@ -31,21 +27,7 @@ class LadderScraper(
     }
 
     override fun run() {
-        while (true) {
-            try {
-                // TODO Consider using something like https://stackoverflow.com/questions/25296718/repeat-an-action-every-2-seconds-in-java here.
-
-                val currTime = DateTime.now()
-
-                scrapePageBrowser()
-
-                val delta = Period(currTime, DateTime.now()).millis
-
-                Thread.sleep((ScraperConst.MILLIS_PER_DAY) / max(1, config.dailyInterval) - delta)
-            } catch (e: Exception) {
-                logger.error(e) { "Caught exception while running!" }
-            }
-        }
+        scrapePageBrowserDaily(config.dailyInterval)
     }
 
 }
