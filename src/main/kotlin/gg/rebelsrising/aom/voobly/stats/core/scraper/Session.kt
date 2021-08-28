@@ -4,19 +4,32 @@ import gg.rebelsrising.aom.voobly.stats.core.config.VooblyConfig
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
-class Session(private val config: VooblyConfig) {
+class LoginFailureException(msg: String) : Exception(msg)
+
+class Session(config: VooblyConfig) {
 
     companion object {
 
         const val CONTENT_OFFSET = 19 // Fixed post request content length, added to user/pass length.
+        const val POST_TIMEOUT_MILLIS = 10_000
         const val USER_AGENT =
             "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405"
         const val LOGIN_URL = "https://www.voobly.com/login"
         const val LOGIN_AUTH_URL = "https://www.voobly.com/login/auth"
 
+        val PURGE_KEY_LIST = listOf("vbly_session2", "vbly_session3")
+        val LOGGED_IN_KEY_LIST = listOf("vbly_username", "vbly_password")
+
     }
 
-    private val getHeaderMap = mutableMapOf(
+    private var sessionCookies: MutableMap<String, String> = mutableMapOf()
+
+    private val loginData = mutableMapOf(
+        "username" to config.user,
+        "password" to config.pass,
+    )
+
+    private val getHeaderMap = mapOf(
         "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "Accept-Encoding" to "gzip, deflate",
         "Accept-Language" to "de-CH",
@@ -32,7 +45,7 @@ class Session(private val config: VooblyConfig) {
         "Upgrade-Insecure-Requests" to "1"
     )
 
-    private val postHeaderMap = mutableMapOf(
+    private val postHeaderMap = mapOf(
         "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "Accept-Encoding" to "gzip, deflate, br",
         "Accept-Language" to "de-CH",
@@ -51,13 +64,10 @@ class Session(private val config: VooblyConfig) {
         "Upgrade-Insecure-Requests" to "1"
     )
 
-    var sessionCookies: MutableMap<String, String> = mutableMapOf()
-
-    fun isLoggedIn(): Boolean {
-        TODO("Implement this.")
-    }
-
-    fun getRequest(url: String, cookies: MutableMap<String, String> = sessionCookies): Connection.Response {
+    fun getRequest(
+        url: String,
+        cookies: Map<String, String> = sessionCookies
+    ): Connection.Response {
         return Jsoup.connect(url)
             .headers(getHeaderMap)
             .userAgent(USER_AGENT)
@@ -68,8 +78,8 @@ class Session(private val config: VooblyConfig) {
 
     fun postRequest(
         url: String,
-        data: MutableMap<String, String> = mutableMapOf(),
-        cookies: MutableMap<String, String> = sessionCookies
+        data: Map<String, String> = mapOf(),
+        cookies: Map<String, String> = sessionCookies
     ): Connection.Response {
         return Jsoup.connect(url)
             .headers(postHeaderMap)
@@ -77,27 +87,29 @@ class Session(private val config: VooblyConfig) {
             .data(data)
             .cookies(cookies)
             .method(Connection.Method.POST)
+            .timeout(POST_TIMEOUT_MILLIS)
             .execute()
     }
 
-    fun login(): Session {
-        // Perform get request to login page (to not seem suspicious).
+    fun isLoggedIn(response: Connection.Response): Boolean {
+        return response.cookies().keys.containsAll(LOGGED_IN_KEY_LIST)
+    }
+
+    fun login() {
+        // Perform get request to login page (to not seem too suspicious) before making the actual login request.
         val get = getRequest(LOGIN_URL)
 
-        val data = mutableMapOf(
-            "username" to config.user,
-            "password" to config.pass,
-        )
+        // Requests may throw a SocketTimeoutException if we fail to connect.
+        val post = postRequest(LOGIN_AUTH_URL, loginData, get.cookies())
 
-        // Login.
-        val post = postRequest(LOGIN_AUTH_URL, data, get.cookies())
+        // Throw an exception if we failed to log in for whatever reason.
+        if (!isLoggedIn(post)) {
+            throw LoginFailureException("Failed to login - are your credentials specified correctly in the config?")
+        }
 
         sessionCookies = post.cookies()
-        sessionCookies.remove("vbly_session2")
-        sessionCookies.remove("vbly_session3")
+        sessionCookies.keys.removeAll(PURGE_KEY_LIST)
         // Do NOT set vbly_GMT_bias or timestamps will be wrong.
-
-        return this
     }
 
 }

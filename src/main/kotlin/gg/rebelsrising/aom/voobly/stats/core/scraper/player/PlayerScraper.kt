@@ -50,7 +50,6 @@ class PlayerScraper(
     private val logger = KotlinLogging.logger {}
 
     fun processPlayerJob(): Boolean {
-        // Not too many pending match jobs, get player job and scrape the player's match history.
         val playerJob = Db.getPlayerJobForProcessing(ladder) ?: return false
 
         logger.info { "Scraping matches for player with ID ${playerJob.id}." }
@@ -70,7 +69,6 @@ class PlayerScraper(
         while (true) {
             try {
                 if (!processPlayerJob()) {
-                    // Happens if we have plenty of match IDs with status OPEN or no OPEN player jobs.
                     Thread.sleep(config.idleSleep)
                 }
             } catch (e: Exception) {

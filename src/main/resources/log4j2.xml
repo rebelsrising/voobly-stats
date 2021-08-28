@@ -21,9 +21,9 @@
     <Loggers>
         <Logger name="gg.rebelsrising.aom.voobly.stats" level="DEBUG" additivity="true">
         </Logger>
-        <Logger name="Exposed" level="INFO">
+        <Logger name="Exposed" level="OFF">
         </Logger>
-        <Logger name="com.zaxxer.hikari" level="INFO">
+        <Logger name="com.zaxxer.hikari" level="OFF">
         </Logger>
         <Root level="DEBUG">
             <AppenderRef ref="File"/>

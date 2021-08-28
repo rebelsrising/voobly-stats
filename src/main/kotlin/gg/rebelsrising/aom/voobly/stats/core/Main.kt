@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
+import gg.rebelsrising.aom.voobly.stats.core.config.DatabaseConfig
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
@@ -12,6 +13,10 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.match.MatchScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.LadderScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.PlayerScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.recent.RecentScraper
+import mu.KotlinLogging
+import kotlin.system.exitProcess
+
+private val logger = KotlinLogging.logger {}
 
 class VooblyScraper : CliktCommand() {
 
@@ -34,26 +39,86 @@ class VooblyScraper : CliktCommand() {
         .enum<Mode>()
         .default(Mode.PLAYER_LADDER)
 
-    override fun run() {
-        val config = Config.load(config)
-        val s = Session(config.voobly).login()
+    private fun logExceptionAndExit(e: Exception) {
+        logger.error { e }
+        exitProcess(1)
+    }
 
-        Db.connect(config.database)
+    private fun loadConfig(): Config {
+        logger.info { "Loading configuration at ${config}..." }
+
+        val config = Config.load(config)
+
+        logger.info { "Successfully loaded configuration." }
+
+        return config
+    }
+
+    private fun vooblyLogin(config: Config): Session {
+        logger.info { "Connecting to Voobly..." }
+
+        val s = Session(config.voobly)
+
+        try {
+            s.login()
+        } catch (e: Exception) {
+            logger.info { "Failed to log in - exiting." }
+            logExceptionAndExit(e)
+        }
+
+        logger.info { "Successfully logged into Voobly." }
+
+        return s
+    }
+
+    private fun dbConnect(databaseConfig: DatabaseConfig) {
+        logger.info { "Establishing database connection..." }
+
+        try {
+            Db.connect(databaseConfig)
+        } catch (e: Exception) {
+            logger.info { "Failed to connect to database - exiting." }
+            logExceptionAndExit(e)
+        }
+
+        // Only creates the tables if they don't already exist.
         Db.createTables()
 
-        // TODO Reset entries from PROCESSING to OPEN.
+        logger.info { "Successfully connected to the database." }
+    }
+
+    private fun startScrapers(session: Session, config: Config) {
+        logger.info { "Starting the requested scrapers..." }
 
         if (mode == Mode.PLAYER_LADDER || mode == Mode.HYBRID) {
-            Thread(LadderScraper(s, ladder, config.ladderScraper)).start()
-            Thread(PlayerScraper(s, ladder, config.playerScraper)).start()
+            Thread(LadderScraper(session, ladder, config.ladderScraper)).start()
+            Thread(PlayerScraper(session, ladder, config.playerScraper)).start()
         }
 
         if (mode == Mode.RECENT_GAMES || mode == Mode.HYBRID) {
-            Thread(RecentScraper(s, ladder, config.recentScraper)).start()
+            Thread(RecentScraper(session, ladder, config.recentScraper)).start()
         }
 
         // TODO Add options to specify number of workers.
-        Thread(MatchScraper(s, ladder, config.matchScraper)).start()
+        Thread(MatchScraper(session, ladder, config.matchScraper)).start()
+
+        logger.info { "Successfully started the requested scrapers." }
+    }
+
+    override fun run() {
+        logger.info { "Starting." }
+
+        val config = loadConfig()
+
+        val session = vooblyLogin(config)
+
+        dbConnect(config.database)
+
+        // TODO Reset entries from PROCESSING to OPEN.
+
+        startScrapers(session, config)
+
+        logger.info { "Setup complete." }
     }
 
 }
