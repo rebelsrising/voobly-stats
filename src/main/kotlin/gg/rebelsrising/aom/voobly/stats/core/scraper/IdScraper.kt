@@ -6,7 +6,7 @@ import mu.KLogger
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.Period
-import kotlin.math.max
+import org.joda.time.PeriodType
 
 abstract class IdScraper(
     val session: Session,
@@ -88,15 +88,21 @@ abstract class IdScraper(
     }
 
     fun scrapePageBrowserDaily(numRunsPerDay: Long) {
+        if (numRunsPerDay < 1) {
+            return
+        }
+
         while (true) {
             try {
-                val currTime = DateTime.now()
+                // TODO Info logging here.
+                val startTime = DateTime.now()
 
                 scrapePageBrowser()
 
-                val delta = Period(currTime, DateTime.now()).millis
+                val endTime = DateTime.now()
+                val delta = Period(startTime, endTime, PeriodType.millis())
 
-                Thread.sleep((DateTimeConstants.MILLIS_PER_DAY) / max(1, numRunsPerDay) - delta)
+                Thread.sleep(DateTimeConstants.MILLIS_PER_DAY / numRunsPerDay - delta.millis)
             } catch (e: Exception) {
                 logger.error(e) { ScraperConst.SCRAPER_EXCEPTION_MSG }
             }
