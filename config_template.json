@@ -11,7 +11,7 @@
     "pass": ""
   },
   "matchScraper": {
-    "busySleep": 1000,
+    "busySleep": 2000,
     "idleSleep": 1000,
     "lastProcessingThresholdMins": 10,
     "requireMap": false,
@@ -23,10 +23,10 @@
   },
   "ladderScraper": {
     "busySleep": 10000,
-    "dailyInterval": 2
+    "dailyInterval": 1
   },
   "recentScraper": {
     "busySleep": 5000,
-    "dailyInterval": 24
+    "dailyInterval": 1
   }
 }
