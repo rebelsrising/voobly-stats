@@ -43,7 +43,7 @@ class PlayerParser : Parser<ArrayList<Player>> {
             }
         }
 
-        logger.debug { "ID: $id Name: $name Team Name: $teamTag Team URL: $teamUrl" }
+        logger.debug { "ID: $id Name: $name Team Tag: $teamTag Team URL: $teamUrl" }
 
         // Img: Civ.
         val img = e.select("img")
