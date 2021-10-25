@@ -8,6 +8,7 @@ import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.config.DatabaseConfig
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
+import gg.rebelsrising.aom.voobly.stats.core.rec.RecLoader
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import gg.rebelsrising.aom.voobly.stats.core.scraper.match.MatchScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.player.LadderScraper
@@ -24,7 +25,8 @@ class VooblyScraper : CliktCommand() {
 
         PLAYER_LADDER,
         RECENT_GAMES,
-        HYBRID
+        HYBRID,
+        DOWNLOAD
 
     }
 
@@ -114,11 +116,15 @@ class VooblyScraper : CliktCommand() {
 
         dbConnect(config.database)
 
-        // TODO Reset entries from PROCESSING to OPEN.
+        if (mode != Mode.DOWNLOAD) {
+            // TODO Reset entries from PROCESSING to OPEN.
 
-        startScrapers(session, config)
+            startScrapers(session, config)
 
-        logger.info { "Setup complete." }
+            logger.info { "Setup complete." }
+        } else {
+            RecLoader(session, config).run()
+        }
     }
 
 }

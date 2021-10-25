@@ -3,11 +3,8 @@ package gg.rebelsrising.aom.voobly.stats.core.dal
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import gg.rebelsrising.aom.voobly.stats.core.config.DatabaseConfig
-import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
-import gg.rebelsrising.aom.voobly.stats.core.model.Match
-import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob
+import gg.rebelsrising.aom.voobly.stats.core.model.*
 import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob.MatchScrapeStatus
-import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob
 import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob.PlayerScrapeStatus
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import org.jetbrains.exposed.sql.*
@@ -250,6 +247,86 @@ object Db {
 
             jobs
         }
+    }
+
+    fun getMatchDataByCondition(
+        ladder: Ladder = Ladder.AOT_1X,
+        minRating: Int = 0,
+        civ: Civ = Civ.UNKNOWN,
+        playerId: Int = -1,
+    ): List<Match> {
+        return transaction {
+            val query = MatchTable.join(
+                PlayerDataTable,
+                JoinType.INNER,
+                additionalConstraint = { MatchTable.matchId eq PlayerDataTable.matchId }
+            ).selectAll()
+
+            query.andWhere {
+                (MatchTable.datePlayed greater DateTime.now().minusMonths(3)) and
+                        (MatchTable.recUrl neq "") and
+                        ((MatchTable.mod eq "Voobly Balance Patch 5.0") or (MatchTable.mod eq "Voobly Balance Patch 5.0 Blind")) and
+                        (MatchTable.ladder eq ladder)
+            }
+
+            if (minRating > 0) {
+                query.andWhere {
+                    MatchTable.rating greater minRating
+                }
+            }
+
+            if (playerId != -1) {
+                query.andWhere { PlayerDataTable.playerId eq playerId }
+            }
+
+            if (civ != Civ.UNKNOWN) {
+                query.andWhere { PlayerDataTable.civ eq civ }
+            }
+
+            query.map {
+                Match(
+                    matchId = it[MatchTable.matchId],
+                    date = it[MatchTable.datePlayed],
+                    duration = it[MatchTable.duration],
+                    map = it[MatchTable.map],
+                    mod = it[MatchTable.mod],
+                    ladder = it[MatchTable.ladder],
+                    recUrl = it[MatchTable.recUrl],
+                    rating = it[MatchTable.rating]
+                )
+            }.toCollection(ArrayList())
+        }
+    }
+
+    fun getPlayerIdsForMatchIds(idList: List<Int>): Map<Int, List<Player>> {
+        val matchPlayerMap = mutableMapOf<Int, MutableList<Player>>()
+
+        transaction {
+            PlayerDataTable.select {
+                (PlayerDataTable.matchId inList idList)
+            }.forEach {
+                val id = it[PlayerDataTable.matchId]
+
+                if (!matchPlayerMap.containsKey(id)) {
+                    matchPlayerMap[id] = mutableListOf()
+                }
+
+                matchPlayerMap[id]!!.add(
+                    Player(
+                        playerId = it[PlayerDataTable.playerId],
+                        name = it[PlayerDataTable.name],
+                        teamTag = it[PlayerDataTable.teamTag],
+                        teamUrl = it[PlayerDataTable.teamUrl],
+                        civ = it[PlayerDataTable.civ],
+                        team = it[PlayerDataTable.team],
+                        newRating = it[PlayerDataTable.newRating],
+                        delta = it[PlayerDataTable.delta],
+                    )
+                )
+            }
+        }
+
+        return matchPlayerMap
     }
 
 }
