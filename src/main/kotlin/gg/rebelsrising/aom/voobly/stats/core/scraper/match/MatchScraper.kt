@@ -46,14 +46,12 @@ class MatchScraper(
         val url = idToMatchUrl(matchId)
         val doc = session.getRequest(url).parse()
 
-        val match = matchParser.parse(doc)
+        val meta = matchParser.parse(doc)
         val ladder = ladderParser.parse(doc)
         val players = playerParser.parse(doc)
         val rec = recParser.parse(doc)
 
-        match.process(ladder, players, rec)
-
-        return match
+        return Match.fromData(meta, ladder, players, rec)
     }
 
     fun processMatchJob(job: MatchScrapeJob): ScrapeResult {

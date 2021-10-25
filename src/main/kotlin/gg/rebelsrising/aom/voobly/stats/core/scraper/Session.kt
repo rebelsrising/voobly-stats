@@ -73,6 +73,7 @@ class Session(config: VooblyConfig) {
             .userAgent(USER_AGENT)
             .cookies(cookies)
             .method(Connection.Method.GET)
+            .ignoreContentType(true)
             .execute()
     }
 
@@ -88,6 +89,7 @@ class Session(config: VooblyConfig) {
             .cookies(cookies)
             .method(Connection.Method.POST)
             .timeout(POST_TIMEOUT_MILLIS)
+            .ignoreContentType(true)
             .execute()
     }
 

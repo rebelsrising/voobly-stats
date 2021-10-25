@@ -1,5 +1,6 @@
 package gg.rebelsrising.aom.voobly.stats.core.model
 
+import gg.rebelsrising.aom.voobly.stats.core.parser.match.MatchMetaData
 import org.joda.time.DateTime
 
 class Match(
@@ -7,46 +8,41 @@ class Match(
     val date: DateTime,
     val duration: Int,
     val map: String,
-    val mod: String
+    val mod: String,
+    var ladder: Ladder,
+    var recUrl: String,
+    var rating: Short = 0,
+    var hasObs: Boolean = false
 ) {
 
-    lateinit var ladder: Ladder
-        private set
+    companion object {
+
+        fun fromData(meta: MatchMetaData, ladder: Ladder, playerList: List<Player>, url: String): Match {
+            return Match(
+                meta.matchId,
+                meta.date,
+                meta.duration,
+                meta.map,
+                meta.mod,
+                ladder,
+                url
+            ).addPlayers(playerList)
+        }
+
+    }
 
     var players: List<Player> = ArrayList()
         private set
 
-    var recUrl: String = ""
-        private set
-
-    var rating: Short = 0
-        private set
-
-    var hasObs = false
-        private set
-
-    fun setMatchLadder(matchLadder: Ladder) {
-        ladder = matchLadder
-    }
-
-    fun addPlayers(playerList: List<Player>) {
+    fun addPlayers(playerList: List<Player>): Match {
         players = cleanPlayers(ArrayList(playerList))
+
         updateRating()
-    }
-
-    fun setRecUrl(url: String) {
-        recUrl = url
-    }
-
-    fun process(ladder: Ladder, playerList: List<Player>, url: String): Match {
-        setMatchLadder(ladder)
-        addPlayers(playerList)
-        setRecUrl(url)
 
         return this
     }
 
-    fun cleanPlayers(playerList: ArrayList<Player>): List<Player> {
+    private fun cleanPlayers(playerList: ArrayList<Player>): List<Player> {
         // Don't iterate over the list directly to avoid ConcurrentModificationException.
         val it = playerList.iterator()
 
@@ -61,7 +57,7 @@ class Match(
         return playerList
     }
 
-    fun updateRating() {
+    private fun updateRating() {
         if (players.isEmpty()) {
             rating = 0
             return
@@ -77,13 +73,13 @@ class Match(
     }
 
     fun isComplete(requireMap: Boolean = false): Boolean {
-        val res = players.size >= 2 && this::ladder.isInitialized
+        val hasTwoPlayers = players.size >= 2
 
         if (!requireMap) {
-            return res
+            return hasTwoPlayers
         }
 
-        return res && ((map != "n/a" && map != "") || recUrl != "")
+        return hasTwoPlayers && ((map != "n/a" && map != "") || recUrl != "")
     }
 
 }

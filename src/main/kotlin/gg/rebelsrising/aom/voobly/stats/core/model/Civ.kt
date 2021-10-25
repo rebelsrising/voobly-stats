@@ -26,4 +26,14 @@ enum class Civ(val id: Int) {
 
     }
 
+    fun toText(): String {
+        return this.name.lowercase().replaceFirstChar {
+            if (it.isLowerCase()) {
+                it.titlecase()
+            } else {
+                it.toString()
+            }
+        }
+    }
+
 }

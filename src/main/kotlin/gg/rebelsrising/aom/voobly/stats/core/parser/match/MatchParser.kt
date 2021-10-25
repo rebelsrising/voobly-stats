@@ -1,14 +1,22 @@
 package gg.rebelsrising.aom.voobly.stats.core.parser.match
 
-import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.parser.util.TimeUtil
 import mu.KotlinLogging
+import org.joda.time.DateTime
 import org.jsoup.nodes.Document
 
 private val logger = KotlinLogging.logger {}
 
-class MatchParser : Parser<Match> {
+data class MatchMetaData(
+    val matchId: Int,
+    val date: DateTime,
+    val duration: Int,
+    val map: String,
+    val mod: String
+)
+
+class MatchParser : Parser<MatchMetaData> {
 
     companion object {
 
@@ -17,7 +25,7 @@ class MatchParser : Parser<Match> {
     }
 
     // TODO Better exception handling/escalation.
-    override fun parse(doc: Document): Match {
+    override fun parse(doc: Document): MatchMetaData {
         val table = doc.select(TABLE_CSS_QUERY)
 
         // This should work for AoM and AoE.
@@ -38,7 +46,7 @@ class MatchParser : Parser<Match> {
 
         logger.debug { "Match ID: $matchId Date: $date Map: $map Duration: $duration Mod: $mod" }
 
-        return Match(
+        return MatchMetaData(
             matchId.substringAfter("#").toInt(),
             TimeUtil.getDate(date),
             TimeUtil.getDuration(duration),
