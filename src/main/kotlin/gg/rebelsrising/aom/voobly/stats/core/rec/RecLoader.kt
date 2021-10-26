@@ -42,16 +42,22 @@ class RecLoader(
 
     }
 
-    fun getRecFromUrl(m: Match, players: List<Player>) {
+    private fun getRecFromUrl(m: Match, players: List<Player>) {
         val fileName = buildFileName(m, players)
         val rec = m.recUrl
 
         val recZip = session.getRequest(REC_URL + rec).bodyAsBytes()
         val zis = ZipInputStream(ByteArrayInputStream(recZip))
+
+        // We always have exactly 1 file (if we have none something went wrong).
         zis.nextEntry
 
-        // TODO Take path from config (at start of function).
-        File("recs/$fileName.rcx").writeBytes(zis.readAllBytes())
+        val bytes = zis.readAllBytes()
+        if (bytes.isNotEmpty()) {
+            // TODO Better logging.
+            // TODO Take path from config (at start of function).
+            File("recs/$fileName.rcx").writeBytes(bytes)
+        }
     }
 
     override fun run() {
@@ -68,8 +74,10 @@ class RecLoader(
         for (m in matches) {
             try {
                 getRecFromUrl(m, playerMap[m.matchId]!!)
+                logger.info { "Downloaded rec with ID ${m.matchId}." }
             } catch (e: Exception) {
-                logger.error { "Failed to get rec (either name or file) with ID ${m.matchId}." }
+                // TODO Better logging.
+                logger.error { "Failed to get rec with ID ${m.matchId}." }
             }
         }
 

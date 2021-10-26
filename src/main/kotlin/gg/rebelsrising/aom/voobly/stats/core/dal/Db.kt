@@ -257,13 +257,9 @@ object Db {
         mapString: String = ""
     ): List<Match> {
         return transaction {
-            val query = MatchTable.join(
-                PlayerDataTable,
-                JoinType.INNER,
-                additionalConstraint = { MatchTable.matchId eq PlayerDataTable.matchId }
-            ).selectAll()
+            val matchQuery = MatchTable.selectAll()
 
-            query.andWhere { // Recs are only kept for 80 days for whatever reason.
+            matchQuery.andWhere { // Recs are only kept for 80 days for whatever reason.
                 (MatchTable.datePlayed greater DateTime.now().minusDays(80)) and
                         (MatchTable.recUrl neq "") and
                         ((MatchTable.mod eq "Voobly Balance Patch 5.0") or (MatchTable.mod eq "Voobly Balance Patch 5.0 Blind")) and
@@ -271,22 +267,30 @@ object Db {
             }
 
             if (minRating > 0) {
-                query.andWhere { MatchTable.rating greaterEq minRating }
-            }
-
-            if (playerId != -1) {
-                query.andWhere { PlayerDataTable.playerId eq playerId }
-            }
-
-            if (civ != Civ.UNKNOWN) {
-                query.andWhere { (PlayerDataTable.civ eq civ) }
+                matchQuery.andWhere { MatchTable.rating greaterEq minRating }
             }
 
             if (mapString != "") {
-                query.andWhere { MatchTable.map.lowerCase() like "%${mapString}%".lowercase() }
+                matchQuery.andWhere { MatchTable.map.lowerCase() like "%${mapString}%".lowercase() }
             }
 
-            query.map {
+            if (playerId != -1 || civ != Civ.UNKNOWN) {
+                val playerQuery = PlayerDataTable.slice(PlayerDataTable.matchId)
+                    .selectAll()
+                    .withDistinct(true)
+
+                if (playerId != -1) {
+                    playerQuery.andWhere { PlayerDataTable.playerId eq playerId }
+                }
+
+                if (civ != Civ.UNKNOWN) {
+                    playerQuery.andWhere { (PlayerDataTable.civ eq civ) }
+                }
+
+                matchQuery.andWhere { MatchTable.matchId inSubQuery playerQuery }
+            }
+
+            matchQuery.map {
                 Match(
                     matchId = it[MatchTable.matchId],
                     date = it[MatchTable.datePlayed],
