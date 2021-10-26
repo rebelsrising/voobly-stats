@@ -254,6 +254,7 @@ object Db {
         minRating: Int = 0,
         civ: Civ = Civ.UNKNOWN,
         playerId: Int = -1,
+        mapString: String = ""
     ): List<Match> {
         return transaction {
             val query = MatchTable.join(
@@ -262,17 +263,15 @@ object Db {
                 additionalConstraint = { MatchTable.matchId eq PlayerDataTable.matchId }
             ).selectAll()
 
-            query.andWhere {
-                (MatchTable.datePlayed greater DateTime.now().minusMonths(3)) and
+            query.andWhere { // Recs are only kept for 80 days for whatever reason.
+                (MatchTable.datePlayed greater DateTime.now().minusDays(80)) and
                         (MatchTable.recUrl neq "") and
                         ((MatchTable.mod eq "Voobly Balance Patch 5.0") or (MatchTable.mod eq "Voobly Balance Patch 5.0 Blind")) and
                         (MatchTable.ladder eq ladder)
             }
 
             if (minRating > 0) {
-                query.andWhere {
-                    MatchTable.rating greater minRating
-                }
+                query.andWhere { MatchTable.rating greaterEq minRating }
             }
 
             if (playerId != -1) {
@@ -280,7 +279,11 @@ object Db {
             }
 
             if (civ != Civ.UNKNOWN) {
-                query.andWhere { PlayerDataTable.civ eq civ }
+                query.andWhere { (PlayerDataTable.civ eq civ) }
+            }
+
+            if (mapString != "") {
+                query.andWhere { MatchTable.map.lowerCase() like "%${mapString}%".lowercase() }
             }
 
             query.map {

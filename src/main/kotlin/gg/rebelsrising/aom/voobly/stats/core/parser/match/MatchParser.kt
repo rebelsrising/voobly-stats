@@ -34,7 +34,7 @@ class MatchParser : Parser<MatchMetaData> {
         val matchId = table[1].text()
         val date = table[4].text()
         // val rating = table[6].text() // Calculated from player details.
-        val map = table[8].text()
+        val map = table[8].text().lowercase() // Fix casing.
         val duration = table[10].text()
         // val players = table[12].text() // Unused.
 

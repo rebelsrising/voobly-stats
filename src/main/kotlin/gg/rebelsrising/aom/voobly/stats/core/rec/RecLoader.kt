@@ -2,6 +2,7 @@ package gg.rebelsrising.aom.voobly.stats.core.rec
 
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
+import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import gg.rebelsrising.aom.voobly.stats.core.model.Player
@@ -13,8 +14,15 @@ import java.util.zip.ZipInputStream
 
 private val logger = KotlinLogging.logger {}
 
-// TODO Add CLI command directly for this.
-class RecLoader(val session: Session, val config: Config) {
+class RecLoader(
+    val session: Session,
+    val config: Config,
+    val ladder: Ladder,
+    val minRating: Int,
+    val civ: Civ,
+    val playerId: Int,
+    val map: String
+) : Runnable {
 
     companion object {
 
@@ -27,32 +35,42 @@ class RecLoader(val session: Session, val config: Config) {
         private fun buildFileName(m: Match, pl: List<Player>): String {
             val p0Details = getPlayerDetailString(pl[0])
             val p1Details = getPlayerDetailString(pl[1])
+            val map = m.map.replace("/", "-")
 
-            return "${m.matchId}_${p0Details}_${p1Details}_${m.map}".replace(" ", "_")
+            return "${m.matchId}_${p0Details}_${p1Details}_${map}".replace(" ", "_")
         }
 
     }
 
-    fun run() {
-        // TODO Add logging.
+    fun getRecFromUrl(m: Match, players: List<Player>) {
+        val fileName = buildFileName(m, players)
+        val rec = m.recUrl
 
+        val recZip = session.getRequest(REC_URL + rec).bodyAsBytes()
+        val zis = ZipInputStream(ByteArrayInputStream(recZip))
+        zis.nextEntry
+
+        // TODO Take path from config (at start of function).
+        File("recs/$fileName.rcx").writeBytes(zis.readAllBytes())
+    }
+
+    override fun run() {
         val matches = Db.getMatchDataByCondition(
-            ladder = Ladder.AOT_1X,
-            minRating = 1750
+            ladder = ladder,
+            minRating = minRating,
+            civ = civ,
+            playerId = playerId,
+            mapString = map
         )
 
         val playerMap = Db.getPlayerIdsForMatchIds(matches.map { it.matchId })
 
         for (m in matches) {
-            val fileName = buildFileName(m, playerMap[m.matchId]!!)
-            val rec = m.recUrl
-
-            val recZip = session.getRequest(REC_URL + rec).bodyAsBytes()
-            val zis = ZipInputStream(ByteArrayInputStream(recZip))
-            zis.nextEntry;
-
-            // TODO Take path from config (at start of function).
-            File("recs/$fileName.rcx").writeBytes(zis.readAllBytes())
+            try {
+                getRecFromUrl(m, playerMap[m.matchId]!!)
+            } catch (e: Exception) {
+                logger.error { "Failed to get rec (either name or file) with ID ${m.matchId}." }
+            }
         }
 
         logger.info { "Done." }
