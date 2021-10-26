@@ -254,7 +254,8 @@ object Db {
         minRating: Int = 0,
         civ: Civ = Civ.UNKNOWN,
         playerId: Int = -1,
-        mapString: String = ""
+        mapString: String = "",
+        patch: String = ""
     ): List<Match> {
         return transaction {
             val matchQuery = MatchTable.selectAll()
@@ -262,7 +263,7 @@ object Db {
             matchQuery.andWhere { // Recs are only kept for 80 days for whatever reason.
                 (MatchTable.datePlayed greater DateTime.now().minusDays(80)) and
                         (MatchTable.recUrl neq "") and
-                        ((MatchTable.mod eq "Voobly Balance Patch 5.0") or (MatchTable.mod eq "Voobly Balance Patch 5.0 Blind")) and
+                        (MatchTable.mod like "%$patch%") and
                         (MatchTable.ladder eq ladder)
             }
 
@@ -271,13 +272,13 @@ object Db {
             }
 
             if (mapString != "") {
-                matchQuery.andWhere { MatchTable.map.lowerCase() like "%${mapString}%".lowercase() }
+                matchQuery.andWhere { MatchTable.map.lowerCase() like "%$mapString%".lowercase() }
             }
 
             if (playerId != -1 || civ != Civ.UNKNOWN) {
                 val playerQuery = PlayerDataTable.slice(PlayerDataTable.matchId)
                     .selectAll()
-                    .withDistinct(true)
+                    .withDistinct(true) // Mirror matchups give duplicates here.
 
                 if (playerId != -1) {
                     playerQuery.andWhere { PlayerDataTable.playerId eq playerId }

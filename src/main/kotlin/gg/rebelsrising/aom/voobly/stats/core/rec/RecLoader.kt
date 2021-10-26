@@ -9,7 +9,8 @@ import gg.rebelsrising.aom.voobly.stats.core.model.Player
 import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
 import java.io.ByteArrayInputStream
-import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.zip.ZipInputStream
 
 private val logger = KotlinLogging.logger {}
@@ -21,11 +22,13 @@ class RecLoader(
     val minRating: Int,
     val civ: Civ,
     val playerId: Int,
-    val map: String
+    val map: String,
+    val patch: String
 ) : Runnable {
 
     companion object {
 
+        const val REC_SUFFIX = "rcx"
         const val REC_URL = "https://www.voobly.com/files/view/"
 
         private fun getPlayerDetailString(p: Player): String {
@@ -33,20 +36,27 @@ class RecLoader(
         }
 
         private fun buildFileName(m: Match, pl: List<Player>): String {
+            val map = m.map.replace("/", "-")
+
+            if (pl.size > 2) {
+                return "${m.matchId}_${map}_${m.rating}".replace(" ", "_")
+            }
+
             val p0Details = getPlayerDetailString(pl[0])
             val p1Details = getPlayerDetailString(pl[1])
-            val map = m.map.replace("/", "-")
 
             return "${m.matchId}_${p0Details}_${p1Details}_${map}".replace(" ", "_")
         }
 
     }
 
-    private fun getRecFromUrl(m: Match, players: List<Player>) {
-        val fileName = buildFileName(m, players)
-        val rec = m.recUrl
+    private val recPath = Path.of(config.download.storage)
 
-        val recZip = session.getRequest(REC_URL + rec).bodyAsBytes()
+    private fun getRecFromUrl(m: Match, players: List<Player>) {
+        // Build filename.
+        val fileName = buildFileName(m, players)
+
+        val recZip = session.getRequest(REC_URL + m.recUrl).bodyAsBytes()
         val zis = ZipInputStream(ByteArrayInputStream(recZip))
 
         // We always have exactly 1 file (if we have none something went wrong).
@@ -54,9 +64,8 @@ class RecLoader(
 
         val bytes = zis.readAllBytes()
         if (bytes.isNotEmpty()) {
-            // TODO Better logging.
-            // TODO Take path from config (at start of function).
-            File("recs/$fileName.rcx").writeBytes(bytes)
+            val file = recPath.resolve("$fileName.$REC_SUFFIX").toFile()
+            file.writeBytes(bytes)
         }
     }
 
@@ -66,22 +75,36 @@ class RecLoader(
             minRating = minRating,
             civ = civ,
             playerId = playerId,
-            mapString = map
+            mapString = map,
+            patch = patch
         )
 
         val playerMap = Db.getPlayerIdsForMatchIds(matches.map { it.matchId })
 
-        for (m in matches) {
+        Files.createDirectories(recPath);
+
+        var succRecs = 0
+        val totRecs = matches.size
+
+        logger.info { "Attempting to download $totRecs recorded games..." }
+
+        for ((i, m) in matches.withIndex()) {
+            logger.info { "Downloading rec $i/${totRecs}..." }
+
+            val id = m.matchId
+
             try {
-                getRecFromUrl(m, playerMap[m.matchId]!!)
-                logger.info { "Downloaded rec with ID ${m.matchId}." }
+                getRecFromUrl(m, playerMap[id]!!)
+
+                logger.info { "Downloaded rec with ID $id." }
+
+                succRecs++
             } catch (e: Exception) {
-                // TODO Better logging.
-                logger.error { "Failed to get rec with ID ${m.matchId}." }
+                logger.error { "Failed to get rec with ID $id." }
             }
         }
 
-        logger.info { "Done." }
+        logger.info { "Downloaded $succRecs/$totRecs recorded games." }
     }
 
 }

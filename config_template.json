@@ -10,6 +10,9 @@
     "user": "",
     "pass": ""
   },
+  "download": {
+    "storage": "recs"
+  },
   "matchScraper": {
     "busySleep": 2000,
     "idleSleep": 1000,

@@ -25,7 +25,7 @@ class RecLauncher : CliktCommand(name = "download") {
 
     private val minRating: Int by option(help = "The minimum rating to filter recorded games for.")
         .int()
-        .default(10)
+        .default(0)
 
     private val civ: Civ by option(help = "The major god to filter recorded games for.")
         .enum<Civ>()
@@ -38,10 +38,13 @@ class RecLauncher : CliktCommand(name = "download") {
     private val map: String by option(help = "The map to filter recorded games for.")
         .default("")
 
+    private val patch: String by option(help = "The patch to filter recorded games for.")
+        .default("Voobly Balance Patch 5.0")
+
     private fun startLoader(session: Session, config: Config) {
         logger.info { "Starting recorded game downloader..." }
 
-        val loader = RecLoader(session, config, ladder, minRating, civ, playerId, map)
+        val loader = RecLoader(session, config, ladder, minRating, civ, playerId, map, patch)
 
         Thread(loader).start()
 

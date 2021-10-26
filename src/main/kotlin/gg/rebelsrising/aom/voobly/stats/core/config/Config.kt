@@ -14,7 +14,8 @@ data class Config(
     val matchScraper: MatchScraperConfig,
     val playerScraper: IdScraperConfig,
     val ladderScraper: IdScraperDailyConfig,
-    val recentScraper: IdScraperDailyConfig
+    val recentScraper: IdScraperDailyConfig,
+    val download: RecConfig
 ) {
 
     companion object {
