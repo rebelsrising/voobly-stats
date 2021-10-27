@@ -45,7 +45,7 @@ class RecLoader(
             val p0Details = getPlayerDetailString(pl[0])
             val p1Details = getPlayerDetailString(pl[1])
 
-            return "${m.matchId}_${p0Details}_${p1Details}_${map}".replace(" ", "_")
+            return "${m.matchId}_${map}_${p0Details}_${p1Details}".replace(" ", "_")
         }
 
     }
@@ -81,7 +81,7 @@ class RecLoader(
 
         val playerMap = Db.getPlayerIdsForMatchIds(matches.map { it.matchId })
 
-        Files.createDirectories(recPath);
+        Files.createDirectories(recPath)
 
         var succRecs = 0
         val totRecs = matches.size
