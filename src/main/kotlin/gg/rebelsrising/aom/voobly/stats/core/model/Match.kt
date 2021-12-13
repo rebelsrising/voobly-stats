@@ -8,7 +8,7 @@ class Match(
     val date: DateTime,
     val duration: Int,
     val map: String,
-    val mod: String,
+    val mod: String?,
     var ladder: Ladder,
     var recUrl: String,
     var rating: Short = 0,

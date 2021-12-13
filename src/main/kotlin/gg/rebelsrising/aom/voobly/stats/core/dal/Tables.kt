@@ -1,6 +1,6 @@
 package gg.rebelsrising.aom.voobly.stats.core.dal
 
-import gg.rebelsrising.aom.voobly.stats.core.dal.util.datetimezone
+import gg.rebelsrising.aom.voobly.stats.core.dal.columns.datetimezone
 import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob.MatchScrapeStatus
@@ -15,7 +15,7 @@ object MatchTable : Table("match") {
     val ladder = enumerationByName("ladder", 16, Ladder::class)
     val rating = short("rating").index()
     val map = varchar("map", 48).index()
-    val mod = varchar("mod", 48).index()
+    val mod = varchar("mod", 48).index().nullable()
     val duration = integer("game_duration").index() // Seconds.
     val recUrl = varchar("rec_url", 64).index()
     val hasObs = bool("has_obs") // Whether the game had at least one observer.

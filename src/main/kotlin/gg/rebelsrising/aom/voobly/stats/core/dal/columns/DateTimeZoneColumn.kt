@@ -1,4 +1,4 @@
-package gg.rebelsrising.aom.voobly.stats.core.dal.util
+package gg.rebelsrising.aom.voobly.stats.core.dal.columns
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType

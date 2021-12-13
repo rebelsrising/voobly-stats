@@ -22,6 +22,7 @@ class ScraperLauncher : CliktCommand(name = "scrape") {
         PLAYERS,
         RECENT,
         HYBRID
+
     }
 
     private val configPath: String by option(help = "The path of the configuration file to load.")

@@ -13,7 +13,7 @@ data class MatchMetaData(
     val date: DateTime,
     val duration: Int,
     val map: String,
-    val mod: String
+    val mod: String?
 )
 
 class MatchParser : Parser<MatchMetaData> {
@@ -38,10 +38,10 @@ class MatchParser : Parser<MatchMetaData> {
         val duration = table[10].text()
         // val players = table[12].text() // Unused.
 
-        var mod = ""
-
-        if (table.size >= 15) {
-            mod = table[14].text()
+        val mod = if (table.size >= 15) {
+            table[14].text()
+        } else {
+            null
         }
 
         logger.debug { "Match ID: $matchId Date: $date Map: $map Duration: $duration Mod: $mod" }
