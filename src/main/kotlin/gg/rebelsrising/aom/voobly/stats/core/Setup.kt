@@ -3,7 +3,6 @@ package gg.rebelsrising.aom.voobly.stats.core
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.config.DatabaseConfig
 import gg.rebelsrising.aom.voobly.stats.core.dal.Db
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
 import mu.KotlinLogging
 import kotlin.system.exitProcess
 

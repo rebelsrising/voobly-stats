@@ -100,8 +100,6 @@ dependencies {
     implementation group: 'org.jetbrains.exposed', name: 'exposed-dao', version: "$exposedVersion"
     // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-jdbc
     implementation group: 'org.jetbrains.exposed', name: 'exposed-jdbc', version: "$exposedVersion"
-    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-jodatime
-    implementation group: 'org.jetbrains.exposed', name: 'exposed-jodatime', version: "$exposedVersion"
 
     /** POSTGRES. */
     // https://mvnrepository.com/artifact/org.postgresql/postgresql

@@ -9,7 +9,7 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.IdScraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.LADDER_MATCHES
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import mu.KotlinLogging
 
 class RecentScraper(

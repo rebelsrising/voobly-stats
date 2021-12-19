@@ -1,4 +1,4 @@
-package gg.rebelsrising.aom.voobly.stats.core.scraper
+package gg.rebelsrising.aom.voobly.stats.core
 
 import gg.rebelsrising.aom.voobly.stats.core.config.VooblyConfig
 import org.jsoup.Connection
@@ -16,6 +16,7 @@ class Session(config: VooblyConfig) {
             "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405"
         const val LOGIN_URL = "https://www.voobly.com/login"
         const val LOGIN_AUTH_URL = "https://www.voobly.com/login/auth"
+        const val GMT_OFFSET_COOKIE = "vbly_GMT_bias"
 
         val PURGE_KEY_LIST = listOf("vbly_session2", "vbly_session3")
         val LOGGED_IN_KEY_LIST = listOf("vbly_username", "vbly_password")
@@ -111,7 +112,7 @@ class Session(config: VooblyConfig) {
 
         sessionCookies = post.cookies()
         sessionCookies.keys.removeAll(PURGE_KEY_LIST)
-        // Do NOT set vbly_GMT_bias or timestamps will be wrong.
+        sessionCookies[GMT_OFFSET_COOKIE] = "0" // Disable offset so we can use GMT.
     }
 
 }

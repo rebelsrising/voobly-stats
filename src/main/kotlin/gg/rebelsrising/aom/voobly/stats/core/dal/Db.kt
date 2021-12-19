@@ -10,7 +10,7 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.ScrapeResult
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.joda.time.DateTime
+import java.time.OffsetDateTime
 import javax.sql.DataSource
 
 object Db {
@@ -81,8 +81,8 @@ object Db {
                 it[matchId] = j.id
                 it[ladder] = j.ladder
                 it[status] = j.status
-                it[lastProcessingAttempt] = DateTime.now()
-                it[dateIndexed] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
+                it[dateIndexed] = OffsetDateTime.now()
             }
         }
     }
@@ -93,8 +93,8 @@ object Db {
                 it[playerId] = j.id
                 it[ladder] = j.ladder
                 it[status] = j.status
-                it[lastProcessingAttempt] = DateTime.now()
-                it[dateIndexed] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
+                it[dateIndexed] = OffsetDateTime.now()
             }
         }
     }
@@ -136,7 +136,7 @@ object Db {
             PlayerJobTable.update({ PlayerJobTable.playerId eq job.id }) {
                 // Don't update ID, ladder, or indexing time.
                 it[status] = job.status
-                it[lastProcessingAttempt] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
             }
         }
     }
@@ -146,7 +146,7 @@ object Db {
             MatchJobTable.update({ MatchJobTable.matchId eq job.id }) {
                 // Don't update ID, ladder, or indexing time.
                 it[status] = job.status
-                it[lastProcessingAttempt] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
             }
         }
     }
@@ -181,14 +181,14 @@ object Db {
 
             MatchJobTable.update({ MatchJobTable.matchId eq m.matchId }) {
                 it[status] = MatchScrapeStatus.DONE
-                it[lastProcessingAttempt] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
             }
         }
     }
 
     fun getPlayerJobForProcessing(
         targetLadder: Ladder,
-        lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)
+        lastProcessingThreshold: OffsetDateTime = OffsetDateTime.now().minusMinutes(10)
     ): PlayerScrapeJob? {
         return transaction {
             val job = PlayerJobTable.select {
@@ -207,7 +207,7 @@ object Db {
 
             PlayerJobTable.update({ PlayerJobTable.playerId eq job.id }) {
                 it[status] = PlayerScrapeStatus.PROCESSING
-                it[lastProcessingAttempt] = DateTime.now()
+                it[lastProcessingAttempt] = OffsetDateTime.now()
             }
 
             job
@@ -217,7 +217,7 @@ object Db {
     fun getMatchJobBatch(
         size: Int,
         targetLadder: Ladder,
-        lastProcessingThreshold: DateTime = DateTime.now().minusMinutes(10)
+        lastProcessingThreshold: OffsetDateTime = OffsetDateTime.now().minusMinutes(10)
     ): List<MatchScrapeJob> {
         return transaction {
             val jobs = MatchJobTable.select {
@@ -241,7 +241,7 @@ object Db {
                 // TODO Batch update or inside the above map {} block.
                 MatchJobTable.update({ MatchJobTable.matchId eq job.id }) {
                     it[status] = MatchScrapeStatus.PROCESSING
-                    it[lastProcessingAttempt] = DateTime.now()
+                    it[lastProcessingAttempt] = OffsetDateTime.now()
                 }
             }
 
@@ -261,7 +261,7 @@ object Db {
             val matchQuery = MatchTable.selectAll()
 
             matchQuery.andWhere { // Recs are only kept for 80 days for whatever reason.
-                (MatchTable.datePlayed greater DateTime.now().minusDays(80)) and
+                (MatchTable.datePlayed greater OffsetDateTime.now().minusDays(80)) and
                         (MatchTable.recUrl neq "") and
                         (MatchTable.mod like "%$patch%") and
                         (MatchTable.ladder eq ladder)

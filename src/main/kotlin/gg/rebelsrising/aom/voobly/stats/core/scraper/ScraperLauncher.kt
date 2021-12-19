@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import gg.rebelsrising.aom.voobly.stats.core.Setup
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder

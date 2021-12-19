@@ -9,7 +9,7 @@ import gg.rebelsrising.aom.voobly.stats.core.Setup
 import gg.rebelsrising.aom.voobly.stats.core.config.Config
 import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}

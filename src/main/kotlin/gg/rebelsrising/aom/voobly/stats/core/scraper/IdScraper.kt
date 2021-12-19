@@ -1,12 +1,12 @@
 package gg.rebelsrising.aom.voobly.stats.core.scraper
 
+import gg.rebelsrising.aom.voobly.stats.core.Session
+import gg.rebelsrising.aom.voobly.stats.core.TimeConst.MILLIS_PER_DAY
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.PAGEBROWSER
 import mu.KLogger
-import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
-import org.joda.time.Period
-import org.joda.time.PeriodType
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 abstract class IdScraper(
     val session: Session,
@@ -95,14 +95,14 @@ abstract class IdScraper(
         while (true) {
             try {
                 // TODO Info logging here.
-                val startTime = DateTime.now()
+                val startTime = LocalDateTime.now()
 
                 scrapePageBrowser()
 
-                val endTime = DateTime.now()
-                val delta = Period(startTime, endTime, PeriodType.millis())
+                val endTime = LocalDateTime.now()
+                val delta = ChronoUnit.MILLIS.between(startTime, endTime)
 
-                Thread.sleep(DateTimeConstants.MILLIS_PER_DAY / numRunsPerDay - delta.millis)
+                Thread.sleep(MILLIS_PER_DAY / numRunsPerDay - delta)
             } catch (e: Exception) {
                 logger.error(e) { ScraperConst.SCRAPER_EXCEPTION_MSG }
             }

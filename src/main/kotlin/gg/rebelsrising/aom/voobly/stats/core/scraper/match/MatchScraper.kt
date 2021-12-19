@@ -17,9 +17,9 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.Scraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.MATCH_VIEW
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.SCRAPER_EXCEPTION_MSG
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import mu.KotlinLogging
-import org.joda.time.DateTime
+import java.time.OffsetDateTime
 
 private val logger = KotlinLogging.logger {}
 
@@ -120,7 +120,7 @@ class MatchScraper(
         val matchJobs = Db.getMatchJobBatch(
             config.batchSize,
             ladder,
-            DateTime.now().minusMinutes(config.lastProcessingThresholdMins)
+            OffsetDateTime.now().minusMinutes(config.lastProcessingThresholdMins.toLong())
         )
 
         if (matchJobs.isEmpty()) {

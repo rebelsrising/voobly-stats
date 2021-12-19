@@ -1,13 +1,13 @@
 package gg.rebelsrising.aom.voobly.stats.core.dal
 
-import gg.rebelsrising.aom.voobly.stats.core.dal.columns.datetimezone
+import gg.rebelsrising.aom.voobly.stats.core.dal.columns.offsetdatetime
 import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.MatchScrapeJob.MatchScrapeStatus
 import gg.rebelsrising.aom.voobly.stats.core.model.PlayerScrapeJob.PlayerScrapeStatus
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
-import org.joda.time.DateTime
+import java.time.OffsetDateTime
 
 object MatchTable : Table("match") {
 
@@ -19,8 +19,8 @@ object MatchTable : Table("match") {
     val duration = integer("game_duration").index() // Seconds.
     val recUrl = varchar("rec_url", 64).index()
     val hasObs = bool("has_obs") // Whether the game had at least one observer.
-    val datePlayed = datetimezone("date_played")
-    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime.now() }
+    val datePlayed = offsetdatetime("date_played")
+    val dateIndexed = offsetdatetime("date_indexed").clientDefault { OffsetDateTime.now() }
 
     override val primaryKey: PrimaryKey = PrimaryKey(matchId)
 
@@ -55,8 +55,8 @@ object MatchJobTable : Table("match_job") {
     val matchId = integer("match_id").index()
     val ladder = enumerationByName("ladder", 16, Ladder::class)
     val status = enumerationByName("scrape_status", 16, MatchScrapeStatus::class).index()
-    val lastProcessingAttempt = datetimezone("last_processing_attempt").clientDefault { DateTime.now() }
-    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime.now() }
+    val lastProcessingAttempt = offsetdatetime("last_processing_attempt").clientDefault { OffsetDateTime.now() }
+    val dateIndexed = offsetdatetime("date_indexed").clientDefault { OffsetDateTime.now() }
 
     override val primaryKey: PrimaryKey = PrimaryKey(matchId)
 
@@ -67,8 +67,8 @@ object PlayerJobTable : Table("player_job") {
     val playerId = integer("player_id").index()
     val ladder = enumerationByName("ladder", 16, Ladder::class)
     val status = enumerationByName("scrape_status", 16, PlayerScrapeStatus::class).index()
-    val lastProcessingAttempt = datetimezone("last_processing_attempt").clientDefault { DateTime.now() }
-    val dateIndexed = datetimezone("date_indexed").clientDefault { DateTime.now() }
+    val lastProcessingAttempt = offsetdatetime("last_processing_attempt").clientDefault { OffsetDateTime.now() }
+    val dateIndexed = offsetdatetime("date_indexed").clientDefault { OffsetDateTime.now() }
 
     override val primaryKey: PrimaryKey = PrimaryKey(playerId)
 

@@ -6,7 +6,7 @@ import gg.rebelsrising.aom.voobly.stats.core.model.Civ
 import gg.rebelsrising.aom.voobly.stats.core.model.Ladder
 import gg.rebelsrising.aom.voobly.stats.core.model.Match
 import gg.rebelsrising.aom.voobly.stats.core.model.Player
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import mu.KotlinLogging
 import java.io.ByteArrayInputStream
 import java.nio.file.Files

@@ -1,16 +1,16 @@
 package gg.rebelsrising.aom.voobly.stats.core.parser.match
 
 import gg.rebelsrising.aom.voobly.stats.core.parser.Parser
-import gg.rebelsrising.aom.voobly.stats.core.parser.util.TimeUtil
+import gg.rebelsrising.aom.voobly.stats.core.parser.time.VooblyTimeParser
 import mu.KotlinLogging
-import org.joda.time.DateTime
 import org.jsoup.nodes.Document
+import java.time.OffsetDateTime
 
 private val logger = KotlinLogging.logger {}
 
 data class MatchMetaData(
     val matchId: Int,
-    val date: DateTime,
+    val date: OffsetDateTime,
     val duration: Int,
     val map: String,
     val mod: String?
@@ -48,8 +48,8 @@ class MatchParser : Parser<MatchMetaData> {
 
         return MatchMetaData(
             matchId.substringAfter("#").toInt(),
-            TimeUtil.getDate(date),
-            TimeUtil.getDuration(duration),
+            VooblyTimeParser.getDate(date),
+            VooblyTimeParser.getDuration(duration),
             map,
             mod,
         )

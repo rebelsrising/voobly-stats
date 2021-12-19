@@ -12,7 +12,7 @@ import gg.rebelsrising.aom.voobly.stats.core.scraper.Scraper
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.SCRAPER_EXCEPTION_MSG
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.USER_MATCHES
 import gg.rebelsrising.aom.voobly.stats.core.scraper.ScraperConst.VOOBLY_WWW
-import gg.rebelsrising.aom.voobly.stats.core.scraper.Session
+import gg.rebelsrising.aom.voobly.stats.core.Session
 import mu.KotlinLogging
 
 class PlayerHistoryScraper(

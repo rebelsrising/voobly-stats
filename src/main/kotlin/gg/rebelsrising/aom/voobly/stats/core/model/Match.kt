@@ -1,11 +1,11 @@
 package gg.rebelsrising.aom.voobly.stats.core.model
 
 import gg.rebelsrising.aom.voobly.stats.core.parser.match.MatchMetaData
-import org.joda.time.DateTime
+import java.time.OffsetDateTime
 
 class Match(
     val matchId: Int,
-    val date: DateTime,
+    val date: OffsetDateTime,
     val duration: Int,
     val map: String,
     val mod: String?,
